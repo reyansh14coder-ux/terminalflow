@@ -3,13 +3,13 @@ name = "terminalflow"
 version = "2.0.0"
 edition = "2021"
 authors = ["Your Name <your.email@example.com>"]
-description = "🚀 AI-Powered Terminal Dashboard for Developers - The productivity tool you'll actually want to use"
+description = "🚀 AI-Powered Terminal Dashboard for Developers - The Ultimate Dev Toolkit with 20+ Extreme Features"
 license = "MIT"
 repository = "https://github.com/YOUR_USERNAME/terminalflow"
 homepage = "https://terminalflow.dev"
 documentation = "https://docs.terminalflow.dev"
 readme = "README.md"
-keywords = ["terminal", "dashboard", "ai", "productivity", "cli"]
+keywords = ["terminal", "dashboard", "ai", "productivity", "cli", "developer-tools"]
 categories = ["command-line-utilities", "development-tools"]
 rust-version = "1.70"
 
@@ -33,6 +33,9 @@ dialoguer = "0.11"
 console = "0.15"
 keyring = "2.0"
 toml = "0.8"
+regex = "1.10"
+rand = "0.8"
+rpassword = "7.0"
 
 [build-dependencies]
 cc = "1.0"

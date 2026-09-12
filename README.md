@@ -2,13 +2,14 @@
 
 # 🚀 TerminalFlow
 
-### The AI-Powered Terminal Dashboard That Developers Actually Want to Use
+### The AI-Powered Terminal Dashboard That Will Change How You Code Forever
 
 [![GitHub Stars](https://img.shields.io/github/stars/YOUR_USERNAME/terminalflow?style=social)](https://github.com/YOUR_USERNAME/terminalflow/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/YOUR_USERNAME/terminalflow?style=social)](https://github.com/YOUR_USERNAME/terminalflow/network/members)
 [![GitHub Issues](https://img.shields.io/github/issues/YOUR_USERNAME/terminalflow)](https://github.com/YOUR_USERNAME/terminalflow/issues)
 [![License](https://img.shields.io/github/license/YOUR_USERNAME/terminalflow)](LICENSE)
 [![Downloads](https://img.shields.io/github/downloads/YOUR_USERNAME/terminalflow/total)](https://github.com/YOUR_USERNAME/terminalflow/releases)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/YOUR_USERNAME/terminalflow/ci.yml?branch=main)](https://github.com/YOUR_USERNAME/terminalflow/actions)
 
 [![TerminalFlow Demo](https://raw.githubusercontent.com/YOUR_USERNAME/terminalflow/main/assets/demo.png)](https://github.com/YOUR_USERNAME/terminalflow)
 
@@ -18,59 +19,79 @@
 
 ## 🎯 What is TerminalFlow?
 
-TerminalFlow is **not** just another terminal tool. It's an **AI-powered productivity command center** that lives in your terminal and understands your workflow.
+TerminalFlow is **NOT** just another terminal tool. It's a **complete development command center** with **20+ extreme features** that developers actually need.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  📊 TerminalFlow v2.0                    ⚡ AI Mode: ON    │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  📁 Project: terminalflow          📅 Today: 23 commits    │
-│  ─────────────────────────────────────────────────────────  │
-│                                                             │
-│  🔥 Git Status                                             │
-│  ├── Modified: 5 files                                     │
-│  ├── Added: 2 files                                        │
-│  └── Ready to push: YES                                    │
-│                                                             │
-│  🤖 AI Insights                                            │
-│  ├── You've been coding for 4h 23m                         │
-│  ├── Peak productivity: 2-4 PM                             │
-│  └── Suggestion: Take a break! ☕                           │
-│                                                             │
-│  ⚡ Quick Actions                                          │
-│  ├── [g] Git Dashboard  [d] Docker  [t] Test               │
-│  └── [m] Monitor        [a] AI Chat [q] Quit                │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  🚀 TerminalFlow v2.0.0                          ⚡ AI Mode: ON           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  📊 Dashboard         🤖 AI Assistant        🔐 Secrets Manager            │
+│  ─────────────────   ─────────────────────   ───────────────────────────   │
+│  • Git Status         • Code Review           • Encrypted Vault             │
+│  • Docker             • Auto Fix              • SSH Keys                    │
+│  • Process Monitor    • Code Generation       • API Keys                    │
+│  • System Stats       • Commit Messages       • Environment Import          │
+│                                                                             │
+│  🔌 Plugin System     🌐 HTTP Client         🔍 Log Viewer                 │
+│  ─────────────────   ─────────────────────   ───────────────────────────   │
+│  • Marketplace        • REST API Testing      • Real-time Analysis          │
+│  • Hot Reload         • Request History       • Error Detection             │
+│  • Custom Commands    • Response Parsing      • Pattern Search              │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## ✨ Why Developers Are Going Crazy
+## ✨ 20+ EXTREME FEATURES
 
-### 🧠 AI That Actually Understands You
-- **Smart Suggestions** - TerminalFlow learns your coding patterns
-- **Auto-fix Errors** - Paste an error, get an instant solution
-- **Code Review** - AI reviews your commits before push
-- **Commit Messages** - Never write boring commits again
+### 🧠 AI-Powered Features
+| Feature | Description |
+|---------|-------------|
+| 🤖 AI Assistant | Ask anything, get instant answers |
+| 📝 Code Review | AI reviews your code before push |
+| 🔧 Auto Fix | Paste error, get instant solution |
+| 💬 Commit Messages | Never write boring commits again |
+| 🎨 Code Generation | Generate structs, endpoints, tests |
 
-### 📊 Beautiful Dashboard
-- **Real-time Git Status** - See everything at a glance
-- **Project Analytics** - Track your productivity
-- **Docker Monitor** - Manage containers without leaving terminal
-- **Test Runner** - Run tests with beautiful output
+### 📊 Dashboard & Monitoring
+| Feature | Description |
+|---------|-------------|
+| 📊 Real-time Dashboard | Beautiful terminal UI |
+| 🐳 Docker Manager | Manage containers without leaving terminal |
+| 📈 System Monitor | CPU, Memory, Disk, Network stats |
+| ⚙️ Process Monitor | Track running processes |
+| 🔄 Git Integration | Full git workflow in one place |
 
-### ⚡ Lightning Fast
-- **Zero Lag** - Written in Rust for maximum performance
-- **Minimal Resources** - Uses less than 10MB RAM
-- **Instant Startup** - Opens in milliseconds
+### 🔐 Security & Secrets
+| Feature | Description |
+|---------|-------------|
+| 🔐 Secret Manager | Encrypted secret storage |
+| 🔑 Vault System | Military-grade encryption |
+| 🌐 SSH Manager | Manage SSH connections |
+| 🔒 SSH Tunnels | Secure tunnel management |
+| 📁 Environment Import | Import secrets from env vars |
 
-### 🎨 Developer Experience
-- **Color-coded Output** - Easy on the eyes
-- **Keyboard Navigation** - Never touch the mouse
-- **Customizable Themes** - Make it yours
-- **Plugin System** - Extend with your own tools
+### 🛠️ Development Tools
+| Feature | Description |
+|---------|-------------|
+| 🔌 Plugin System | Extend with custom plugins |
+| 🌐 HTTP Client | Full REST API testing |
+| 📋 API Testing | Automated API test suite |
+| 📁 File Watcher | Watch files for changes |
+| 📝 Log Viewer | Real-time log analysis |
+| 🔍 Git Bisect | Automated bug finder |
+| 🎨 Code Generator | Generate boilerplate code |
+
+### 🚀 Advanced Features
+| Feature | Description |
+|---------|-------------|
+| 🔌 Plugin Marketplace | Install community plugins |
+| 🔄 Hot Reload | Changes reflected instantly |
+| 📊 Performance Metrics | Track your productivity |
+| 🎨 Custom Themes | Cyberpunk, Ocean, Forest |
+| ⚡ Lightning Fast | Written in Rust |
 
 ---
 
@@ -150,6 +171,66 @@ tf commit --ai
 
 # Code review
 tf review HEAD
+
+# Generate code
+tf gen struct MyStruct
+tf gen endpoint POST /api/users
+tf gen tests my_function
+```
+
+### Secret Management
+
+```bash
+# Set a secret
+tf secret set DATABASE_URL "postgres://..."
+
+# Get a secret
+tf secret get DATABASE_URL
+
+# Import from environment
+tf secret import AWS_
+```
+
+### HTTP Client
+
+```bash
+# GET request
+tf http GET https://api.github.com/users/octocat
+
+# POST with body
+tf http POST https://api.example.com/data -b '{"key":"value"}'
+```
+
+### Process Management
+
+```bash
+# List processes
+tf ps
+
+# Filter by name
+tf ps --filter node
+
+# Top CPU consumers
+tf ps --top-cpu
+
+# Kill process
+tf kill 1234
+```
+
+### Log Analysis
+
+```bash
+# View logs
+tf logs /var/log/app.log
+
+# Filter by level
+tf logs app.log --level error
+
+# Search pattern
+tf logs app.log --search "timeout"
+
+# Tail last 100 lines
+tf logs app.log --tail 100
 ```
 
 ---
@@ -164,6 +245,8 @@ tf review HEAD
 
 ![AI Assistant](https://raw.githubusercontent.com/YOUR_USERNAME/terminalflow/main/assets/screenshot-ai.png)
 
+![Secret Manager](https://raw.githubusercontent.com/YOUR_USERNAME/terminalflow/main/assets/screenshot-secrets.png)
+
 </div>
 
 ---
@@ -174,6 +257,35 @@ tf review HEAD
 - **[ratatui](https://github.com/ratatui-org/ratatui)** - Beautiful terminal UI
 - **[OpenAI API](https://openai.com)** - Powering AI features
 - **[Git2](https://github.com/rust-lang/git2-rs)** - Native Git integration
+- **[Reqwest](https://github.com/seanmonstar/reqwest)** - HTTP client
+- **[Tokio](https://tokio.rs)** - Async runtime
+
+---
+
+## 📦 Architecture
+
+```
+terminalflow/
+├── src/
+│   ├── main.rs           # CLI entry point
+│   ├── ai/               # AI features (GPT-4)
+│   ├── api/              # API client & server
+│   ├── bisect/           # Git bisect automation
+│   ├── codegen/          # Code generation
+│   ├── commands/         # Command implementations
+│   ├── git/              # Git integration
+│   ├── http/             # HTTP client & router
+│   ├── logs/             # Log viewer & analyzer
+│   ├── multiplexer/      # Terminal multiplexer
+│   ├── plugins/          # Plugin system
+│   ├── process/          # Process monitoring
+│   ├── secrets/          # Secret management
+│   ├── ssh/              # SSH management
+│   ├── ui/               # Terminal UI
+│   └── watcher/          # File watcher
+├── tests/                # E2E tests
+└── Cargo.toml            # Dependencies
+```
 
 ---
 
@@ -183,12 +295,21 @@ tf review HEAD
 - [x] 📊 Git Dashboard
 - [x] 🤖 AI Assistant
 - [x] 🐳 Docker Integration
-- [ ] 🔌 Plugin System
+- [x] 🔐 Secret Manager
+- [x] 🔑 Vault System
+- [x] 🌐 SSH Management
+- [x] 📡 HTTP Client
+- [x] 🔌 Plugin System
+- [x] 📁 File Watcher
+- [x] 📝 Log Viewer
+- [x] 🔍 Git Bisect
+- [x] 🎨 Code Generator
+- [x] ⚙️ Process Monitor
 - [ ] 📱 Mobile Companion App
 - [ ] 🌐 Web Dashboard
-- [ ] 🔐 Secret Manager
 - [ ] 📈 Team Analytics
 - [ ] 🎓 Interactive Tutorials
+- [ ] 🔗 CI/CD Integration
 
 ---
 
@@ -233,8 +354,8 @@ If you find TerminalFlow useful, please give it a star! It helps others discover
 
 ## 🙏 Acknowledgments
 
-- Inspired by [lazygit](https://github.com/jesseduffield/lazygit)
-- UI components from [starship](https://github.com/starship/starship)
+- Inspired by [lazygit](https://github.com/jesseduffield/lazygit), [starship](https://github.com/starship/starship), [atuin](https://github.com/atuinsh/atuin)
+- UI components from [ratatui](https://github.com/ratatui-org/ratatui)
 - AI powered by OpenAI
 
 ---
@@ -242,6 +363,8 @@ If you find TerminalFlow useful, please give it a star! It helps others discover
 <div align="center">
 
 **Made with ❤️ by developers, for developers**
+
+**20+ Features | Lightning Fast | Open Source**
 
 [⬆ Back to Top](#-terminalflow)
 
