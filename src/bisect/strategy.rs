@@ -1,5 +1,4 @@
-use anyhow::Result;
-
+#[derive(Debug, Clone)]
 pub enum BisectStrategy {
     Linear,
     Binary,
@@ -46,11 +45,10 @@ impl BisectPlanner {
     pub fn plan(&self) -> BisectPlan {
         let estimated_steps = match &self.strategy {
             BisectStrategy::Binary => {
-                // Binary search: log2(n) steps
-                let n = 100; // Estimated number of commits
+                let n = 100;
                 (n as f64).log2().ceil() as usize
             }
-            BisectStrategy::Linear => 50, // Average case
+            BisectStrategy::Linear => 50,
             BisectStrategy::Custom(commits) => commits.len(),
         };
 
@@ -75,8 +73,8 @@ impl std::fmt::Display for BisectPlan {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Bisect Plan:\n  Start: {}\n  End: {}\n  Strategy: {:?}\n  Estimated steps: {}",
-            self.start_commit, self.end_commit, self.strategy, self.estimated_steps
+            "Bisect Plan:\n  Start: {}\n  End: {}\n  Estimated steps: {}",
+            self.start_commit, self.end_commit, self.estimated_steps
         )
     }
 }

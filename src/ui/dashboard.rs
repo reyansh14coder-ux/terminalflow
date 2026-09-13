@@ -2,20 +2,20 @@ use std::io;
 use std::time::{Duration, Instant};
 
 use crossterm::{
-    event::{self, Event, KeyCode, KeyEvent, KeyModifiers},
+    event::{self, Event, KeyCode, KeyModifiers},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use ratatui::{
     backend::CrosstermBackend,
-    layout::{Alignment, Constraint, Direction, Layout, Rect},
-    style::{Color, Modifier, Style},
-    text::{Line, Span, Text},
-    widgets::{Block, Borders, Paragraph, Wrap},
+    layout::{Constraint, Direction, Layout, Rect},
+    style::{Modifier, Style},
+    text::{Line, Span},
+    widgets::{Block, Borders, Paragraph},
     Terminal,
 };
 
-use super::components::{gradient_text, centered_rect, Header, InfoBox, StatusBar, TabsWidget};
+use super::components::{centered_rect, Header, InfoBox, StatusBar, TabsWidget};
 use super::theme::Theme;
 use crate::git::status::GitStatus;
 
@@ -33,7 +33,8 @@ pub async fn run() -> anyhow::Result<()> {
 
     loop {
         terminal.draw(|f| {
-            ui(f, &app, &theme);
+            let size = f.size();
+            ui(f, &app, &theme, size);
         })?;
 
         let timeout = tick_rate
@@ -137,39 +138,32 @@ impl App {
 
     fn on_tick(&mut self) {
         self.tick_count += 1;
-        // Simulate loading git status
         if self.git_status.is_none() && self.tick_count > 2 {
             self.git_status = Some(GitStatus::mock());
         }
     }
 }
 
-fn ui(f: &mut ratatui::Frame, app: &App, theme: &Theme) {
-    let size = f.area();
-
-    // Main layout
+fn ui(f: &mut ratatui::Frame, app: &App, theme: &Theme, size: Rect) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(3),  // Header
-            Constraint::Length(3),  // Tabs
-            Constraint::Min(10),   // Content
-            Constraint::Length(3),  // Status bar
+            Constraint::Length(3),
+            Constraint::Length(3),
+            Constraint::Min(10),
+            Constraint::Length(3),
         ])
         .split(size);
 
-    // Header
     let header = Header::new("TerminalFlow", "2.0.0", theme);
     header.render(f, chunks[0]);
 
-    // Tabs
     let tabs = vec!["📊 Git", "🐳 Docker", "🧪 Tests", "📈 Monitor", "🤖 AI"];
     let tabs_widget = TabsWidget::new(tabs, app.selected_tab, theme);
     tabs_widget.render(f, chunks[1]);
 
-    // Content
     match app.selected_tab {
-        0 => render_git_tab(f, chunks[2], app, theme),
+        0 => render_git_tab(f, chunks[2], theme),
         1 => render_docker_tab(f, chunks[2], theme),
         2 => render_test_tab(f, chunks[2], theme),
         3 => render_monitor_tab(f, chunks[2], theme),
@@ -177,7 +171,6 @@ fn ui(f: &mut ratatui::Frame, app: &App, theme: &Theme) {
         _ => {}
     }
 
-    // Status bar
     let status = StatusBar::new(theme)
         .add_item("Project", "terminalflow", theme.style_primary())
         .add_item("Commits", "23 today", theme.style_success())
@@ -185,7 +178,6 @@ fn ui(f: &mut ratatui::Frame, app: &App, theme: &Theme) {
         .add_item("[?] Help", "", theme.style_dim());
     status.render(f, chunks[3]);
 
-    // Quit confirmation popup
     if app.quit_confirm {
         let popup = centered_rect(40, 20, size);
         let block = Block::default()
@@ -216,7 +208,7 @@ fn ui(f: &mut ratatui::Frame, app: &App, theme: &Theme) {
     }
 }
 
-fn render_git_tab(f: &mut ratatui::Frame, area: Rect, app: &App, theme: &Theme) {
+fn render_git_tab(f: &mut ratatui::Frame, area: Rect, theme: &Theme) {
     let chunks = Layout::default()
         .direction(Direction::Horizontal)
         .constraints([
@@ -225,7 +217,6 @@ fn render_git_tab(f: &mut ratatui::Frame, area: Rect, app: &App, theme: &Theme) 
         ])
         .split(area);
 
-    // Git status box
     let git_info = InfoBox::new("🔥 Git Status", theme)
         .border_color(theme.success)
         .add_line(Line::from(vec![
@@ -247,7 +238,6 @@ fn render_git_tab(f: &mut ratatui::Frame, area: Rect, app: &App, theme: &Theme) 
 
     git_info.render(f, chunks[0]);
 
-    // Quick actions box
     let actions = InfoBox::new("⚡ Quick Actions", theme)
         .border_color(theme.accent)
         .add_line(Line::from(vec![

@@ -1,6 +1,5 @@
-use anyhow::{Context, Result};
+use anyhow::Result;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TestCase {
@@ -34,14 +33,12 @@ pub struct AssertionResult {
 }
 
 pub struct APITester {
-    client: super::client::APIClient,
     test_cases: Vec<TestCase>,
 }
 
 impl APITester {
     pub fn new() -> Result<Self> {
         Ok(Self {
-            client: super::client::APIClient::new()?,
             test_cases: Vec::new(),
         })
     }
@@ -53,10 +50,31 @@ impl APITester {
     pub async fn run_test(&self, test_case: &TestCase) -> TestResult {
         let start = std::time::Instant::now();
         
-        let response = self.client.request(
-            &test_case.request.method,
-            &test_case.request.url,
-            test_case.request.body.clone(),
+        let client = match super::client::APIClient::new() {
+            Ok(c) => c,
+            Err(e) => {
+                return TestResult {
+                    name: test_case.name.clone(),
+                    passed: false,
+                    assertions: vec![AssertionResult {
+                        assertion: Assertion::StatusCode(200),
+                        passed: false,
+                        message: format!("Failed to create client: {}", e),
+                    }],
+                    duration_ms: 0,
+                };
+            }
+        };
+        
+        let response = client.execute(
+            &super::client::APIRequest {
+                method: test_case.request.method.clone(),
+                url: test_case.request.url.clone(),
+                headers: test_case.request.headers.clone(),
+                body: test_case.request.body.clone(),
+                timeout: test_case.request.timeout,
+                follow_redirects: true,
+            },
         ).await;
         
         let duration = start.elapsed().as_millis() as u64;
@@ -141,7 +159,7 @@ impl APITester {
                     message: if passed {
                         "Body matches".to_string()
                     } else {
-                        format!("Body does not match expected value")
+                        "Body does not match expected value".to_string()
                     },
                 }
             }

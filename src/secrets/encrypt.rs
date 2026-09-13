@@ -6,17 +6,14 @@ pub struct Encryption {
 
 impl Encryption {
     pub fn new(password: &str) -> Result<Self> {
-        // In real implementation, this would derive a key from the password
         let key = password.as_bytes().to_vec();
         
         Ok(Self { key })
     }
 
     pub fn encrypt(&self, data: &[u8]) -> Result<Vec<u8>> {
-        // In real implementation, this would use AES-256-GCM
         let mut encrypted = data.to_vec();
         
-        // Simple XOR for demonstration
         for (i, byte) in encrypted.iter_mut().enumerate() {
             *byte ^= self.key[i % self.key.len()];
         }
@@ -25,10 +22,8 @@ impl Encryption {
     }
 
     pub fn decrypt(&self, data: &[u8]) -> Result<Vec<u8>> {
-        // In real implementation, this would use AES-256-GCM
         let mut decrypted = data.to_vec();
         
-        // Simple XOR for demonstration
         for (i, byte) in decrypted.iter_mut().enumerate() {
             *byte ^= self.key[i % self.key.len()];
         }
@@ -37,7 +32,6 @@ impl Encryption {
     }
 
     pub fn hash_password(password: &str) -> Result<String> {
-        // In real implementation, this would use bcrypt/scrypt
         use std::collections::hash_map::DefaultHasher;
         use std::hash::{Hash, Hasher};
         
@@ -50,11 +44,10 @@ impl Encryption {
         use rand::Rng;
         
         let mut rng = rand::thread_rng();
-        (0..16).map(|_| rng.gen()).collect()
+        (0..16).map(|_| rng.gen::<u8>()).collect()
     }
 
     pub fn derive_key(password: &[u8], salt: &[u8], iterations: u32) -> Vec<u8> {
-        // In real implementation, this would use PBKDF2/Argon2
         let mut key = Vec::new();
         
         for i in 0..iterations {

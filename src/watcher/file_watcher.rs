@@ -1,6 +1,6 @@
-use anyhow::{Context, Result};
+use anyhow::Result;
 use std::path::PathBuf;
-use std::sync::mpsc::{self, Sender, Receiver};
+use std::sync::mpsc::{self, Receiver};
 use std::time::{Duration, SystemTime};
 
 use super::event::{FileEvent, EventType};
@@ -8,7 +8,6 @@ use super::event::{FileEvent, EventType};
 pub struct FileWatcher {
     path: PathBuf,
     interval: Duration,
-    sender: Option<Sender<FileEvent>>,
     last_modified: Option<SystemTime>,
 }
 
@@ -17,7 +16,6 @@ impl FileWatcher {
         Self {
             path,
             interval: Duration::from_millis(100),
-            sender: None,
             last_modified: None,
         }
     }
@@ -29,7 +27,6 @@ impl FileWatcher {
 
     pub fn watch(&mut self) -> Result<Receiver<FileEvent>> {
         let (sender, receiver) = mpsc::channel();
-        self.sender = Some(sender);
         
         let path = self.path.clone();
         let interval = self.interval;

@@ -194,20 +194,3 @@ pub fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
         ])
         .split(popup_layout[1])[1]
 }
-
-pub fn gradient_text(text: &str, color1: Color, color2: Color) -> Vec<Span> {
-    let chars: Vec<char> = text.chars().collect();
-    let len = chars.len();
-    
-    chars.iter().enumerate().map(|(i, c)| {
-        let ratio = i as f32 / len as f32;
-        let r = ((color1.r() as f32 * (1.0 - ratio)) + (color2.r() as f32 * ratio)) as u8;
-        let g = ((color1.g() as f32 * (1.0 - ratio)) + (color2.g() as f32 * ratio)) as u8;
-        let b = ((color1.b() as f32 * (1.0 - ratio)) + (color2.b() as f32 * ratio)) as u8;
-        
-        Span::styled(
-            c.to_string(),
-            Style::default().fg(Color::Rgb(r, g, b)),
-        )
-    }).collect()
-}

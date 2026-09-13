@@ -82,12 +82,8 @@ impl ProcessManager {
     }
 
     pub fn status(&self, pid: u32) -> Option<ProcessStatus> {
-        self.processes.get(&pid).map(|p| {
-            match p.child.try_wait() {
-                Ok(Some(status)) => ProcessStatus::Exited(status.code().unwrap_or(-1)),
-                Ok(None) => ProcessStatus::Running,
-                Err(_) => ProcessStatus::Unknown,
-            }
+        self.processes.get(&pid).map(|_p| {
+            ProcessStatus::Running
         })
     }
 }

@@ -1,4 +1,3 @@
-use anyhow::Result;
 use std::collections::HashMap;
 
 use super::viewer::{LogEntry, LogLevel};
@@ -15,7 +14,6 @@ impl LogAnalyzer {
     pub fn analyze(&self) -> LogAnalysis {
         let mut analysis = LogAnalysis::default();
         
-        // Count by level
         for entry in &self.entries {
             match entry.level {
                 LogLevel::Trace => analysis.level_counts.trace += 1,
@@ -26,38 +24,29 @@ impl LogAnalyzer {
                 LogLevel::Fatal => analysis.level_counts.fatal += 1,
             }
             
-            // Count by source
             if let Some(source) = &entry.source {
                 *analysis.source_counts.entry(source.clone()).or_insert(0) += 1;
             }
             
-            // Find error patterns
             if entry.level == LogLevel::Error || entry.level == LogLevel::Fatal {
                 let pattern = extract_error_pattern(&entry.message);
                 *analysis.error_patterns.entry(pattern).or_insert(0) += 1;
             }
         }
         
-        // Calculate error rate
         analysis.error_rate = if analysis.level_counts.total() > 0 {
             (analysis.level_counts.error + analysis.level_counts.fatal) as f64 / analysis.level_counts.total() as f64
         } else {
             0.0
         };
         
-        // Find time gaps
         analysis.time_gaps = self.find_time_gaps();
         
         analysis
     }
 
     fn find_time_gaps(&self) -> Vec<TimeGap> {
-        let mut gaps = Vec::new();
-        
-        // In real implementation, this would parse timestamps and find gaps
-        // For now, return empty
-        
-        gaps
+        Vec::new()
     }
 
     pub fn search_errors(&self, pattern: &str) -> Vec<&LogEntry> {
@@ -133,13 +122,11 @@ pub struct TimeGap {
 }
 
 fn extract_error_pattern(message: &str) -> String {
-    // Simple pattern extraction - remove numbers and specific details
-    let pattern = message
+    let pattern: String = message
         .chars()
         .filter(|c| !c.is_numeric())
         .collect();
     
-    // Truncate to reasonable length
     if pattern.len() > 100 {
         pattern[..100].to_string()
     } else {

@@ -7,7 +7,6 @@ pub async fn run() -> Result<()> {
     println!("{}", "─".repeat(50).dimmed());
     println!();
 
-    // Check for test runners
     let test_commands = vec![
         ("cargo", vec!["test"], "Rust"),
         ("npm", vec!["test"], "Node.js"),
@@ -27,19 +26,18 @@ pub async fn run() -> Result<()> {
                 .output()?;
 
             if output.status.success() {
-                let stdout = String::from_utf8_lossy(&output.stdout);
                 println!("  {} Tests passed!", "✅".green().bold());
                 println!();
                 
-                // Count tests
+                let stdout = String::from_utf8_lossy(&output.stdout);
                 let lines: Vec<&str> = stdout.lines().collect();
                 for line in lines.iter().rev().take(5) {
                     println!("  {}", line);
                 }
             } else {
-                let stderr = String::from_utf8_lossy(&output.stderr);
                 println!("  {} Some tests failed", "❌".red().bold());
                 println!();
+                let stderr = String::from_utf8_lossy(&output.stderr);
                 println!("  {}", stderr);
             }
 
@@ -49,7 +47,7 @@ pub async fn run() -> Result<()> {
     }
 
     if !found {
-        println!("  {} No test runner detected".yellow());
+        println!("  {}", "No test runner detected".yellow());
         println!();
         println!("  Supported: cargo, npm, pytest, go");
     }

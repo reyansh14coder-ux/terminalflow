@@ -1,10 +1,10 @@
-use anyhow::{Context, Result};
+use anyhow::Result;
 use std::path::PathBuf;
-use std::sync::mpsc::{self, Sender, Receiver};
+use std::sync::mpsc::{self, Receiver};
 use std::time::{Duration, SystemTime};
 use std::collections::HashMap;
 
-use super::event::{FileEvent, EventType, EventMetadata};
+use super::event::{FileEvent, EventType};
 
 pub struct DirectoryWatcher {
     path: PathBuf,
@@ -53,7 +53,6 @@ impl DirectoryWatcher {
         std::thread::spawn(move || {
             let mut file_states: HashMap<PathBuf, SystemTime> = HashMap::new();
             
-            // Initial scan
             if let Ok(entries) = scan_directory(&path, recursive, &ignore_patterns) {
                 for (entry_path, modified) in entries {
                     file_states.insert(entry_path, modified);
@@ -69,12 +68,10 @@ impl DirectoryWatcher {
                     for (entry_path, modified) in entries {
                         current_files.insert(entry_path.clone(), modified);
                         
-                        // Check if new file
                         if !file_states.contains_key(&entry_path) {
                             let event = FileEvent::new(EventType::Created, entry_path.clone());
                             let _ = sender.send(event);
                         }
-                        // Check if modified
                         else if let Some(last_modified) = file_states.get(&entry_path) {
                             if modified > *last_modified {
                                 let event = FileEvent::new(EventType::Modified, entry_path.clone());
@@ -83,7 +80,6 @@ impl DirectoryWatcher {
                         }
                     }
                     
-                    // Check for deleted files
                     for entry_path in file_states.keys() {
                         if !current_files.contains_key(entry_path) {
                             let event = FileEvent::new(EventType::Deleted, entry_path.clone());
@@ -111,7 +107,6 @@ fn scan_directory(
         for entry in dir_entries.flatten() {
             let entry_path = entry.path();
             
-            // Check ignore patterns
             let should_ignore = ignore_patterns.iter().any(|pattern| {
                 entry_path.to_string_lossy().contains(pattern)
             });

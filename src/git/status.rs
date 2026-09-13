@@ -25,7 +25,7 @@ impl GitStatus {
         options.include_untracked(true);
         options.recurse_untracked_dirs(true);
         
-        let statuses = repo.statuses(Some(Some(&mut options)))?;
+        let statuses = repo.statuses(Some(&mut options))?;
         
         let mut modified = Vec::new();
         let mut added = Vec::new();
@@ -46,7 +46,7 @@ impl GitStatus {
             if status.contains(Status::WT_DELETED) {
                 deleted.push(path.clone());
             }
-            if status.contains(Index::NEW) || status.contains(Index::MODIFIED) {
+            if status.contains(Status::INDEX_NEW) || status.contains(Status::INDEX_MODIFIED) {
                 staged.push(path.clone());
             }
             if status.contains(Status::INDEX_NEW) {

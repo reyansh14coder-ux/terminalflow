@@ -112,7 +112,7 @@ impl SecretManager {
         for (key, value) in std::env::vars() {
             if key.starts_with(prefix) {
                 let name = key.strip_prefix(prefix).unwrap_or(&key);
-                self.set(name, value, Some("Imported from environment"))?;
+                self.set(name, &value, Some("Imported from environment"))?;
                 count += 1;
             }
         }

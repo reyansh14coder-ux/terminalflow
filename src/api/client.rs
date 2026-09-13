@@ -10,6 +10,12 @@ pub struct APIRequest {
     pub headers: HashMap<String, String>,
     pub body: Option<String>,
     pub timeout: Option<u64>,
+    #[serde(default = "default_true")]
+    pub follow_redirects: bool,
+}
+
+fn default_true() -> bool {
+    true
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -51,48 +57,58 @@ impl APIClient {
     }
 
     pub async fn get(&self, path: &str) -> Result<APIResponse> {
-        self.request("GET", path, None).await
+        self.execute(&APIRequest {
+            method: "GET".to_string(),
+            url: path.to_string(),
+            headers: HashMap::new(),
+            body: None,
+            timeout: None,
+            follow_redirects: true,
+        }).await
     }
 
     pub async fn post(&self, path: &str, body: Option<String>) -> Result<APIResponse> {
-        self.request("POST", path, body).await
+        self.execute(&APIRequest {
+            method: "POST".to_string(),
+            url: path.to_string(),
+            headers: HashMap::new(),
+            body,
+            timeout: None,
+            follow_redirects: true,
+        }).await
     }
 
-    pub async fn put(&self, path: &str, body: Option<String>) -> Result<APIResponse> {
-        self.request("PUT", path, body).await
-    }
-
-    pub async fn delete(&self, path: &str) -> Result<APIResponse> {
-        self.request("DELETE", path, None).await
-    }
-
-    pub async fn patch(&self, path: &str, body: Option<String>) -> Result<APIResponse> {
-        self.request("PATCH", path, body).await
-    }
-
-    async fn request(&self, method: &str, path: &str, body: Option<String>) -> Result<APIResponse> {
-        let url = match &self.base_url {
-            Some(base) => format!("{}{}", base, path),
-            None => path.to_string(),
+    pub async fn execute(&self, request: &APIRequest) -> Result<APIResponse> {
+        let url = if request.url.starts_with("http") {
+            request.url.clone()
+        } else {
+            match &self.base_url {
+                Some(base) => format!("{}{}", base, request.url),
+                None => request.url.clone(),
+            }
         };
         
         let start = std::time::Instant::now();
         
-        let mut req = match method {
+        let mut req = match request.method.as_str() {
             "GET" => self.client.get(&url),
             "POST" => self.client.post(&url),
             "PUT" => self.client.put(&url),
             "DELETE" => self.client.delete(&url),
             "PATCH" => self.client.patch(&url),
-            _ => return Err(anyhow::anyhow!("Unsupported HTTP method: {}", method)),
+            _ => return Err(anyhow::anyhow!("Unsupported HTTP method: {}", request.method)),
         };
+        
+        for (key, value) in &request.headers {
+            req = req.header(key.as_str(), value.as_str());
+        }
         
         for (key, value) in &self.default_headers {
             req = req.header(key.as_str(), value.as_str());
         }
         
-        if let Some(body) = body {
-            req = req.body(body);
+        if let Some(body) = &request.body {
+            req = req.body(body.clone());
         }
         
         let response = req.send().await.context("Request failed")?;

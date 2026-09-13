@@ -16,7 +16,6 @@ mod watcher;
 
 use anyhow::Result;
 use clap::{Parser, Subcommand};
-use colored::*;
 
 #[derive(Parser)]
 #[command(
@@ -397,7 +396,10 @@ async fn main() -> Result<()> {
                 method,
                 url,
                 body,
-                ..Default::default()
+                headers: std::collections::HashMap::new(),
+                query: std::collections::HashMap::new(),
+                timeout: Some(30),
+                follow_redirects: true,
             };
             let response = client.execute(&request).await?;
             println!("{} {} - {}ms", response.status, response.status_text, response.duration_ms);
@@ -406,7 +408,7 @@ async fn main() -> Result<()> {
         Some(Commands::Api { command }) => {
             match command {
                 ApiCommands::Test { file } => {
-                    let tester = api::APITester::new()?;
+                    let _tester = api::APITester::new()?;
                     println!("🧪 Running API tests from {}", file);
                 }
                 ApiCommands::Create { name } => {
@@ -418,7 +420,7 @@ async fn main() -> Result<()> {
             let mut monitor = process::ProcessMonitor::new();
             monitor.refresh()?;
             
-            let mut processes = monitor.get_processes().to_vec();
+            let mut processes: Vec<process::ProcessInfo> = monitor.get_processes().to_vec();
             
             if top_cpu {
                 processes.sort_by(|a, b| b.cpu_usage.partial_cmp(&a.cpu_usage).unwrap());
@@ -452,13 +454,18 @@ async fn main() -> Result<()> {
                 
                 if let Some(cmd) = &command {
                     println!("🏃 Running: {}", cmd);
+                    #[cfg(unix)]
                     std::process::Command::new("sh")
                         .args(&["-c", cmd])
+                        .status()?;
+                    #[cfg(windows)]
+                    std::process::Command::new("cmd")
+                        .args(&["/C", cmd])
                         .status()?;
                 }
             }
         }
-        Some(Commands::Logs { file, level, search, tail }) => {
+        Some(Commands::Logs { file, level, search: _, tail }) => {
             let parser = logs::LogParser::new();
             let entries = parser.parse_file(std::path::Path::new(&file))?;
             
@@ -531,8 +538,10 @@ async fn main() -> Result<()> {
             let mut vault = secrets::SecretVault::new(std::path::PathBuf::from("."))?;
             match command {
                 VaultCommands::Unlock => {
-                    let password = rpassword::read_password().unwrap_or_default();
-                    vault.unlock(&password)?;
+                    println!("🔑 Enter password:");
+                    let mut password = String::new();
+                    std::io::stdin().read_line(&mut password)?;
+                    vault.unlock(password.trim())?;
                 }
                 VaultCommands::Lock => {
                     vault.lock()?;
