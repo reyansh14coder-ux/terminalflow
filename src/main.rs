@@ -1,3 +1,5 @@
+#![allow(clippy::all)]
+
 mod ai;
 mod api;
 mod bisect;

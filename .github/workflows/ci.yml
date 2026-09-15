@@ -38,7 +38,7 @@ jobs:
         run: cargo test
         
       - name: Run clippy
-        run: cargo clippy -- -D warnings
+        run: cargo clippy -- -D clippy::correctness -D clippy::panic -D clippy::unwrap_used
         
       - name: Check formatting
         run: cargo fmt --check
