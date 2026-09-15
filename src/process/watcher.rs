@@ -1,5 +1,6 @@
-use anyhow::{Context, Result};
-use std::path::PathBuf;
+#![allow(dead_code)]
+
+use anyhow::Result;
 use std::time::Duration;
 
 pub struct ProcessWatcher {

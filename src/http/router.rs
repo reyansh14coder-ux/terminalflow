@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::collections::HashMap;
 use anyhow::Result;
 
@@ -68,10 +70,10 @@ struct Route {
 }
 
 trait Middleware: Send + Sync {
-    fn before(&self, request: &mut Request) -> Result<()> {
+    fn before(&self, _request: &mut Request) -> Result<()> {
         Ok(())
     }
-    fn after(&self, response: &mut Response) -> Result<()> {
+    fn after(&self, _response: &mut Response) -> Result<()> {
         Ok(())
     }
 }

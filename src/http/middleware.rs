@@ -1,12 +1,14 @@
+#![allow(dead_code)]
+
 use anyhow::Result;
 use std::collections::HashMap;
 
 pub trait Middleware: Send + Sync {
-    fn before_request(&self, request: &mut super::client::HttpRequest) -> Result<()> {
+    fn before_request(&self, _request: &mut super::client::HttpRequest) -> Result<()> {
         Ok(())
     }
 
-    fn after_response(&self, response: &mut super::client::HttpResponse) -> Result<()> {
+    fn after_response(&self, _response: &mut super::client::HttpResponse) -> Result<()> {
         Ok(())
     }
 }
@@ -77,7 +79,7 @@ impl RetryMiddleware {
 }
 
 impl Middleware for RetryMiddleware {
-    fn after_response(&self, response: &mut super::client::HttpResponse) -> Result<()> {
+    fn after_response(&self, _response: &mut super::client::HttpResponse) -> Result<()> {
         // In real implementation, this would retry on failure
         Ok(())
     }
@@ -103,12 +105,12 @@ impl CacheMiddleware {
 }
 
 impl Middleware for CacheMiddleware {
-    fn before_request(&self, request: &mut super::client::HttpRequest) -> Result<()> {
+    fn before_request(&self, _request: &mut super::client::HttpRequest) -> Result<()> {
         // Check cache
         Ok(())
     }
 
-    fn after_response(&self, response: &mut super::client::HttpResponse) -> Result<()> {
+    fn after_response(&self, _response: &mut super::client::HttpResponse) -> Result<()> {
         // Store in cache
         Ok(())
     }

@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use anyhow::Result;
 use std::path::PathBuf;
 
@@ -17,7 +19,7 @@ impl SecretVault {
         })
     }
 
-    pub fn unlock(&mut self, password: &str) -> Result<()> {
+    pub fn unlock(&mut self, _password: &str) -> Result<()> {
         // In real implementation, this would decrypt the vault
         self.encrypted = true;
         println!("🔓 Vault unlocked");

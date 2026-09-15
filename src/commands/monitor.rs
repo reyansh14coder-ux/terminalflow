@@ -16,7 +16,7 @@ pub async fn show() -> Result<()> {
     
     // CPU bar
     let cpu_bar = "█".repeat(cpu_usage as usize / 5) + &"░".repeat(20 - cpu_usage as usize / 5);
-    let cpu_color = if cpu_usage > 80 { "red" } else if cpu_usage > 60 { "yellow" } else { "green" };
+    let _cpu_color = if cpu_usage > 80 { "red" } else if cpu_usage > 60 { "yellow" } else { "green" };
     println!("  CPU:     {} {}%", cpu_bar.cyan(), cpu_usage);
     println!();
     

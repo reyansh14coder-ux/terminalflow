@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::path::Path;
 use anyhow::Result;
 use git2::{Repository, Status, StatusOptions};

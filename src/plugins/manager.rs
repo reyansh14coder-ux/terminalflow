@@ -1,6 +1,8 @@
+#![allow(dead_code)]
+
 use std::collections::HashMap;
 use anyhow::Result;
-use super::loader::{LoadedPlugin, PluginManifest, PluginLoader};
+use super::loader::{LoadedPlugin, PluginLoader};
 
 pub struct PluginManager {
     plugins: HashMap<String, LoadedPlugin>,
@@ -69,7 +71,7 @@ impl PluginManager {
     }
 
     pub fn update_plugin(&mut self, name: &str) -> Result<()> {
-        if let Some(plugin) = self.plugins.get(name) {
+        if let Some(_plugin) = self.plugins.get(name) {
             println!("🔄 Updating plugin '{}'...", name);
             // In real implementation, this would pull updates
             println!("✅ Plugin '{}' updated", name);

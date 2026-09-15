@@ -1,5 +1,6 @@
+#![allow(dead_code)]
+
 use std::collections::HashMap;
-use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

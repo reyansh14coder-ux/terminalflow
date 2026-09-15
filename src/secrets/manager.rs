@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::collections::HashMap;
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};

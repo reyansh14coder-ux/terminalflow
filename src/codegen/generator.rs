@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use anyhow::{Context, Result};
 use std::path::PathBuf;
 
@@ -48,7 +50,7 @@ impl CodeGenerator {
         Ok(code)
     }
 
-    pub fn generate_api_endpoint(&self, method: &str, path: &str, handler_name: &str) -> Result<String> {
+    pub fn generate_api_endpoint(&self, _method: &str, _path: &str, handler_name: &str) -> Result<String> {
         let code = format!(
             r#"pub async fn {}(req: Request) -> Response {{
     // TODO: Implement handler
@@ -70,7 +72,7 @@ mod tests {{
         Ok(code)
     }
 
-    pub fn generate_test(&self, name: &str, test_cases: &[(&str, &str)]) -> Result<String> {
+    pub fn generate_test(&self, _name: &str, test_cases: &[(&str, &str)]) -> Result<String> {
         let mut code = format!("#[cfg(test)]\nmod tests {{\n    use super::*;\n\n");
         
         for (test_name, _test_body) in test_cases {
