@@ -6,7 +6,7 @@ Write-Host "🚀 Installing TerminalFlow..." -ForegroundColor Cyan
 $arch = if ([Environment]::Is64BitOperatingSystem) { "amd64" } else { "x86" }
 
 # Download URL
-$downloadUrl = "https://github.com/YOUR_USERNAME/terminalflow/releases/latest/download/terminalflow-windows-$arch.exe"
+$downloadUrl = "https://github.com/reyansh14coder-ux/terminalflow/releases/latest/download/terminalflow-windows-$arch.exe"
 
 # Install directory
 $installDir = "$env:LOCALAPPDATA\TerminalFlow"
@@ -31,4 +31,4 @@ Write-Host ""
 Write-Host "✅ TerminalFlow installed successfully!" -ForegroundColor Green
 Write-Host ""
 Write-Host "🚀 Run 'terminalflow' or 'tf' to start!" -ForegroundColor Cyan
-Write-Host "📚 Documentation: https://github.com/YOUR_USERNAME/terminalflow#readme" -ForegroundColor Gray
+Write-Host "📚 Documentation: https://github.com/reyansh14coder-ux/terminalflow#readme" -ForegroundColor Gray

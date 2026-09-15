@@ -4,14 +4,14 @@
 
 ### The AI-Powered Terminal Dashboard That Will Change How You Code Forever
 
-[![GitHub Stars](https://img.shields.io/github/stars/YOUR_USERNAME/terminalflow?style=social)](https://github.com/YOUR_USERNAME/terminalflow/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/YOUR_USERNAME/terminalflow?style=social)](https://github.com/YOUR_USERNAME/terminalflow/network/members)
-[![GitHub Issues](https://img.shields.io/github/issues/YOUR_USERNAME/terminalflow)](https://github.com/YOUR_USERNAME/terminalflow/issues)
-[![License](https://img.shields.io/github/license/YOUR_USERNAME/terminalflow)](LICENSE)
-[![Downloads](https://img.shields.io/github/downloads/YOUR_USERNAME/terminalflow/total)](https://github.com/YOUR_USERNAME/terminalflow/releases)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/YOUR_USERNAME/terminalflow/ci.yml?branch=main)](https://github.com/YOUR_USERNAME/terminalflow/actions)
+[![GitHub Stars](https://img.shields.io/github/stars/reyansh14coder-ux/terminalflow?style=social)](https://github.com/reyansh14coder-ux/terminalflow/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/reyansh14coder-ux/terminalflow?style=social)](https://github.com/reyansh14coder-ux/terminalflow/network/members)
+[![GitHub Issues](https://img.shields.io/github/issues/reyansh14coder-ux/terminalflow)](https://github.com/reyansh14coder-ux/terminalflow/issues)
+[![License](https://img.shields.io/github/license/reyansh14coder-ux/terminalflow)](LICENSE)
+[![Downloads](https://img.shields.io/github/downloads/reyansh14coder-ux/terminalflow/total)](https://github.com/reyansh14coder-ux/terminalflow/releases)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/reyansh14coder-ux/terminalflow/ci.yml?branch=main)](https://github.com/reyansh14coder-ux/terminalflow/actions)
 
-[![TerminalFlow Demo](https://raw.githubusercontent.com/YOUR_USERNAME/terminalflow/main/assets/demo.png)](https://github.com/YOUR_USERNAME/terminalflow)
+[![TerminalFlow Demo](https://raw.githubusercontent.com/reyansh14coder-ux/terminalflow/main/assets/demo.png)](https://github.com/reyansh14coder-ux/terminalflow)
 
 </div>
 
@@ -101,10 +101,10 @@ TerminalFlow is **NOT** just another terminal tool. It's a **complete developmen
 
 ```bash
 # macOS / Linux
-curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/terminalflow/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/reyansh14coder-ux/terminalflow/main/install.sh | bash
 
 # Windows (PowerShell)
-irm https://raw.githubusercontent.com/YOUR_USERNAME/terminalflow/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/reyansh14coder-ux/terminalflow/main/install.ps1 | iex
 ```
 
 ### Or Install with Package Managers
@@ -126,7 +126,7 @@ sudo apt install terminalflow
 ### Or Build from Source
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/terminalflow.git
+git clone https://github.com/reyansh14coder-ux/terminalflow.git
 cd terminalflow
 cargo build --release
 cp target/release/terminalflow /usr/local/bin/
@@ -239,13 +239,13 @@ tf logs app.log --tail 100
 
 <div align="center">
 
-![Dashboard](https://raw.githubusercontent.com/YOUR_USERNAME/terminalflow/main/assets/screenshot-dashboard.png)
+![Dashboard](https://raw.githubusercontent.com/reyansh14coder-ux/terminalflow/main/assets/screenshot-dashboard.png)
 
-![Git View](https://raw.githubusercontent.com/YOUR_USERNAME/terminalflow/main/assets/screenshot-git.png)
+![Git View](https://raw.githubusercontent.com/reyansh14coder-ux/terminalflow/main/assets/screenshot-git.png)
 
-![AI Assistant](https://raw.githubusercontent.com/YOUR_USERNAME/terminalflow/main/assets/screenshot-ai.png)
+![AI Assistant](https://raw.githubusercontent.com/reyansh14coder-ux/terminalflow/main/assets/screenshot-ai.png)
 
-![Secret Manager](https://raw.githubusercontent.com/YOUR_USERNAME/terminalflow/main/assets/screenshot-secrets.png)
+![Secret Manager](https://raw.githubusercontent.com/reyansh14coder-ux/terminalflow/main/assets/screenshot-secrets.png)
 
 </div>
 
@@ -255,7 +255,7 @@ tf logs app.log --tail 100
 
 - **[Rust](https://rust-lang.org)** - Core language for blazing speed
 - **[ratatui](https://github.com/ratatui-org/ratatui)** - Beautiful terminal UI
-- **[OpenAI API](https://openai.com)** - Powering AI features
+- **[ratatui](https://ratatui.rs)** - Terminal UI framework
 - **[Git2](https://github.com/rust-lang/git2-rs)** - Native Git integration
 - **[Reqwest](https://github.com/seanmonstar/reqwest)** - HTTP client
 - **[Tokio](https://tokio.rs)** - Async runtime
@@ -319,7 +319,7 @@ We love contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ```bash
 # Quick start for contributors
-git clone https://github.com/YOUR_USERNAME/terminalflow.git
+git clone https://github.com/reyansh14coder-ux/terminalflow.git
 cd terminalflow
 make dev
 ```
@@ -346,7 +346,7 @@ If you find TerminalFlow useful, please give it a star! It helps others discover
 
 <div align="center">
 
-[![Star History Chart](https://api.star-history.com/svg?repos=YOUR_USERNAME/terminalflow&type=Date)](https://star-history.com/#YOUR_USERNAME/terminalflow&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=reyansh14coder-ux/terminalflow&type=Date)](https://star-history.com/#reyansh14coder-ux/terminalflow&Date)
 
 </div>
 
@@ -356,7 +356,7 @@ If you find TerminalFlow useful, please give it a star! It helps others discover
 
 - Inspired by [lazygit](https://github.com/jesseduffield/lazygit), [starship](https://github.com/starship/starship), [atuin](https://github.com/atuinsh/atuin)
 - UI components from [ratatui](https://github.com/ratatui-org/ratatui)
-- AI powered by OpenAI
+- Terminal UI powered by ratatui
 
 ---
 

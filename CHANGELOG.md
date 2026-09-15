@@ -38,4 +38,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-For more details, see the [commit history](https://github.com/YOUR_USERNAME/terminalflow/commits/main).
+For more details, see the [commit history](https://github.com/reyansh14coder-ux/terminalflow/commits/main).

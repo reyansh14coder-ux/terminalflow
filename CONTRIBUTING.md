@@ -15,7 +15,7 @@ Thank you for your interest in contributing to TerminalFlow! 🚀
 
 ```bash
 # Fork on GitHub, then:
-git clone https://github.com/YOUR_USERNAME/terminalflow.git
+git clone https://github.com/reyansh14coder-ux/terminalflow.git
 cd terminalflow
 ```
 
