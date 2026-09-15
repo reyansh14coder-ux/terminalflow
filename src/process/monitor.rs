@@ -132,9 +132,10 @@ impl ProcessMonitor {
     pub fn kill_process(&self, pid: u32) -> Result<()> {
         #[cfg(unix)]
         {
-            unsafe {
-                libc::kill(pid as i32, libc::SIGTERM);
-            }
+            std::process::Command::new("kill")
+                .args(["-TERM", &pid.to_string()])
+                .output()
+                .context("Failed to kill process")?;
         }
         #[cfg(windows)]
         {
