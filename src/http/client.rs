@@ -52,13 +52,13 @@ impl HttpClient {
             .redirect(reqwest::redirect::Policy::limited(10))
             .build()
             .context("Failed to create HTTP client")?;
-        
+
         Ok(Self { client })
     }
 
     pub async fn execute(&self, request: &HttpRequest) -> Result<HttpResponse> {
         let start = std::time::Instant::now();
-        
+
         let mut req = match request.method.as_str() {
             "GET" => self.client.get(&request.url),
             "POST" => self.client.post(&request.url),
@@ -68,34 +68,39 @@ impl HttpClient {
             "HEAD" => self.client.head(&request.url),
             _ => return Err(anyhow::anyhow!("Unsupported method: {}", request.method)),
         };
-        
+
         for (key, value) in &request.headers {
             req = req.header(key.as_str(), value.as_str());
         }
-        
+
         for (key, value) in &request.query {
             req = req.query(&[(key.as_str(), value.as_str())]);
         }
-        
+
         if let Some(body) = &request.body {
             req = req.body(body.clone());
         }
-        
+
         let response = req.send().await.context("Request failed")?;
         let duration = start.elapsed().as_millis() as u64;
-        
+
         let status = response.status().as_u16();
-        let status_text = response.status().canonical_reason().unwrap_or("Unknown").to_string();
+        let status_text = response
+            .status()
+            .canonical_reason()
+            .unwrap_or("Unknown")
+            .to_string();
         let url = response.url().to_string();
-        
-        let headers: HashMap<String, String> = response.headers()
+
+        let headers: HashMap<String, String> = response
+            .headers()
             .iter()
             .map(|(k, v)| (k.to_string(), v.to_str().unwrap_or("").to_string()))
             .collect();
-        
+
         let body = response.text().await.context("Failed to read body")?;
         let size_bytes = body.len();
-        
+
         Ok(HttpResponse {
             status,
             status_text,
@@ -119,7 +124,7 @@ impl HttpClient {
     pub async fn post_json(&self, url: &str, json: &str) -> Result<HttpResponse> {
         let mut headers = HashMap::new();
         headers.insert("Content-Type".to_string(), "application/json".to_string());
-        
+
         let request = HttpRequest {
             method: "POST".to_string(),
             url: url.to_string(),

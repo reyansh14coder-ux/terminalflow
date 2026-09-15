@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
 use anyhow::Result;
-use std::path::Path;
 use regex::Regex;
+use std::path::Path;
 
 #[derive(Debug, Clone)]
 pub struct CodeAnalysis {
@@ -75,7 +75,7 @@ impl CodeAnalyzer {
     pub fn analyze_code(&self, code: &str) -> Result<CodeAnalysis> {
         let lines: Vec<&str> = code.lines().collect();
         let total_lines = lines.len();
-        
+
         let mut blank_lines = 0;
         let mut comment_lines = 0;
         let mut code_lines = 0;
@@ -83,30 +83,33 @@ impl CodeAnalyzer {
         let mut structs = Vec::new();
         let mut enums = Vec::new();
         let mut imports = Vec::new();
-        
+
         for (i, line) in lines.iter().enumerate() {
             let trimmed = line.trim();
-            
+
             if trimmed.is_empty() {
                 blank_lines += 1;
-            } else if trimmed.starts_with("//") || trimmed.starts_with("/*") || trimmed.starts_with("*") {
+            } else if trimmed.starts_with("//")
+                || trimmed.starts_with("/*")
+                || trimmed.starts_with("*")
+            {
                 comment_lines += 1;
             } else {
                 code_lines += 1;
             }
-            
+
             // Find functions
             if let Some(caps) = self.function_regex.captures(line) {
                 functions.push(FunctionInfo {
                     name: caps[1].to_string(),
                     line_start: i + 1,
                     line_end: i + 1,
-                    parameters: line.matches(',').count() + if line.contains('(') && !line.contains(",") && line.contains(')') { 0 } else { 0 },
+                    parameters: line.matches(',').count(),
                     is_public: line.contains("pub"),
                     doc_comment: None,
                 });
             }
-            
+
             // Find structs
             if let Some(caps) = self.struct_regex.captures(line) {
                 structs.push(StructInfo {
@@ -116,7 +119,7 @@ impl CodeAnalyzer {
                     is_public: line.contains("pub"),
                 });
             }
-            
+
             // Find enums
             if let Some(caps) = self.enum_regex.captures(line) {
                 enums.push(EnumInfo {
@@ -126,13 +129,13 @@ impl CodeAnalyzer {
                     is_public: line.contains("pub"),
                 });
             }
-            
+
             // Find imports
             if let Some(caps) = self.import_regex.captures(line) {
                 imports.push(caps[1].to_string());
             }
         }
-        
+
         Ok(CodeAnalysis {
             total_lines,
             blank_lines,

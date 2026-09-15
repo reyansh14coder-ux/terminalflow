@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
-use std::collections::HashMap;
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SSHConnection {
@@ -25,12 +25,12 @@ impl SSHManager {
             .context("Cannot find home directory")?
             .join(".terminalflow")
             .join("ssh.json");
-        
+
         let mut manager = Self {
             connections: HashMap::new(),
             config_path,
         };
-        
+
         manager.load()?;
         Ok(manager)
     }
@@ -75,31 +75,28 @@ impl SSHManager {
     }
 
     pub fn connect(&self, name: &str) -> Result<()> {
-        let conn = self.connections.get(name)
-            .context("Connection not found")?;
-        
-        let mut args = vec![
-            "-p".to_string(),
-            conn.port.to_string(),
-        ];
-        
+        let conn = self.connections.get(name).context("Connection not found")?;
+
+        let mut args = vec!["-p".to_string(), conn.port.to_string()];
+
         if let Some(key) = &conn.key_path {
             args.push("-i".to_string());
             args.push(key.clone());
         }
-        
+
         args.push(format!("{}@{}", conn.user, conn.host));
-        
+
         std::process::Command::new("ssh")
             .args(&args)
             .status()
             .context("Failed to connect")?;
-        
+
         Ok(())
     }
 
     pub fn search(&self, query: &str) -> Vec<&SSHConnection> {
-        self.connections.values()
+        self.connections
+            .values()
             .filter(|c| {
                 c.name.contains(query)
                     || c.host.contains(query)

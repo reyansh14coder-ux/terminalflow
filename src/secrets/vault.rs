@@ -12,7 +12,7 @@ impl SecretVault {
     pub fn new(path: PathBuf) -> Result<Self> {
         let vault_path = path.join("vault");
         std::fs::create_dir_all(&vault_path)?;
-        
+
         Ok(Self {
             path: vault_path,
             encrypted: false,
@@ -38,25 +38,25 @@ impl SecretVault {
 
     pub fn store(&self, name: &str, data: &[u8]) -> Result<()> {
         let file_path = self.path.join(format!("{}.enc", name));
-        
+
         // In real implementation, this would encrypt the data
         std::fs::write(&file_path, data)?;
-        
+
         Ok(())
     }
 
     pub fn retrieve(&self, name: &str) -> Result<Vec<u8>> {
         let file_path = self.path.join(format!("{}.enc", name));
-        
+
         let data = std::fs::read(&file_path)?;
-        
+
         // In real implementation, this would decrypt the data
         Ok(data)
     }
 
     pub fn list_secrets(&self) -> Result<Vec<String>> {
         let mut secrets = Vec::new();
-        
+
         if let Ok(entries) = std::fs::read_dir(&self.path) {
             for entry in entries.flatten() {
                 if let Some(name) = entry.file_name().to_str() {
@@ -66,7 +66,7 @@ impl SecretVault {
                 }
             }
         }
-        
+
         Ok(secrets)
     }
 

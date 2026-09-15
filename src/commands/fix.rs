@@ -27,7 +27,10 @@ pub async fn auto_fix() -> Result<()> {
     println!();
     println!("{}", "─".repeat(50).dimmed());
     println!();
-    println!("  {} Paste an error message and I'll help fix it!", "💡 Tip:".cyan());
+    println!(
+        "  {} Paste an error message and I'll help fix it!",
+        "💡 Tip:".cyan()
+    );
 
     Ok(())
 }

@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
 use anyhow::{Context, Result};
-use std::process::{Child, Command, Stdio};
 use std::collections::HashMap;
+use std::process::{Child, Command, Stdio};
 
 pub struct ProcessManager {
     processes: HashMap<u32, ManagedProcess>,
@@ -28,15 +28,18 @@ impl ProcessManager {
             .stderr(Stdio::piped())
             .spawn()
             .context("Failed to spawn process")?;
-        
+
         let pid = child.id();
-        
-        self.processes.insert(pid, ManagedProcess {
-            child,
-            name: name.to_string(),
-            command: format!("{} {}", command, args.join(" ")),
-        });
-        
+
+        self.processes.insert(
+            pid,
+            ManagedProcess {
+                child,
+                name: name.to_string(),
+                command: format!("{} {}", command, args.join(" ")),
+            },
+        );
+
         println!("✅ Spawned process '{}' with PID {}", name, pid);
         Ok(pid)
     }
@@ -48,15 +51,18 @@ impl ProcessManager {
             .stderr(Stdio::null())
             .spawn()
             .context("Failed to spawn background process")?;
-        
+
         let pid = child.id();
-        
-        self.processes.insert(pid, ManagedProcess {
-            child,
-            name: name.to_string(),
-            command: format!("{} {}", command, args.join(" ")),
-        });
-        
+
+        self.processes.insert(
+            pid,
+            ManagedProcess {
+                child,
+                name: name.to_string(),
+                command: format!("{} {}", command, args.join(" ")),
+            },
+        );
+
         println!("✅ Spawned background process '{}' with PID {}", name, pid);
         Ok(pid)
     }
@@ -78,15 +84,14 @@ impl ProcessManager {
     }
 
     pub fn list(&self) -> Vec<(u32, &str, &str)> {
-        self.processes.iter()
+        self.processes
+            .iter()
             .map(|(pid, p)| (*pid, p.name.as_str(), p.command.as_str()))
             .collect()
     }
 
     pub fn status(&self, pid: u32) -> Option<ProcessStatus> {
-        self.processes.get(&pid).map(|_p| {
-            ProcessStatus::Running
-        })
+        self.processes.get(&pid).map(|_p| ProcessStatus::Running)
     }
 }
 

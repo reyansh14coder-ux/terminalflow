@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
-use std::collections::HashMap;
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Secret {
@@ -25,14 +25,14 @@ impl SecretManager {
             .context("Cannot find home directory")?
             .join(".terminalflow")
             .join("secrets");
-        
+
         std::fs::create_dir_all(&vault_path)?;
-        
+
         let mut manager = Self {
             secrets: HashMap::new(),
             vault_path,
         };
-        
+
         manager.load_secrets()?;
         Ok(manager)
     }
@@ -55,7 +55,7 @@ impl SecretManager {
 
     pub fn set(&mut self, name: &str, value: &str, description: Option<&str>) -> Result<()> {
         let now = chrono::Utc::now();
-        
+
         let secret = Secret {
             name: name.to_string(),
             value: value.to_string(),
@@ -64,10 +64,10 @@ impl SecretManager {
             created_at: now,
             updated_at: now,
         };
-        
+
         self.secrets.insert(name.to_string(), secret);
         self.save_secrets()?;
-        
+
         Ok(())
     }
 
@@ -88,7 +88,8 @@ impl SecretManager {
     }
 
     pub fn search(&self, query: &str) -> Vec<&Secret> {
-        self.secrets.values()
+        self.secrets
+            .values()
             .filter(|s| {
                 s.name.contains(query)
                     || s.description.as_deref().unwrap_or("").contains(query)
@@ -110,7 +111,7 @@ impl SecretManager {
 
     pub fn import_env(&mut self, prefix: &str) -> Result<u32> {
         let mut count = 0;
-        
+
         for (key, value) in std::env::vars() {
             if key.starts_with(prefix) {
                 let name = key.strip_prefix(prefix).unwrap_or(&key);
@@ -118,18 +119,18 @@ impl SecretManager {
                 count += 1;
             }
         }
-        
+
         Ok(count)
     }
 
     pub fn export_env(&self, prefix: &str) -> Result<HashMap<String, String>> {
         let mut env_vars = HashMap::new();
-        
+
         for secret in self.secrets.values() {
             let key = format!("{}{}", prefix, secret.name);
             env_vars.insert(key, secret.value.clone());
         }
-        
+
         Ok(env_vars)
     }
 }

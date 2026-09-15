@@ -1,5 +1,5 @@
-pub mod monitor;
 pub mod manager;
+pub mod monitor;
 pub mod watcher;
 
-pub use monitor::{ProcessMonitor, ProcessInfo};
+pub use monitor::{ProcessInfo, ProcessMonitor};

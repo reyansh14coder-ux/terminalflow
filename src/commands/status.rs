@@ -12,7 +12,11 @@ pub async fn show() -> Result<()> {
     println!("  {} {}", "Branch:".dimmed(), status.branch.green());
     println!();
 
-    if status.modified.is_empty() && status.added.is_empty() && status.deleted.is_empty() && status.untracked.is_empty() {
+    if status.modified.is_empty()
+        && status.added.is_empty()
+        && status.deleted.is_empty()
+        && status.untracked.is_empty()
+    {
         println!("  {} Working tree is clean", "✅".green());
     } else {
         if !status.modified.is_empty() {

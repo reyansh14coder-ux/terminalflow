@@ -36,7 +36,10 @@ impl Middleware for LoggingMiddleware {
 
     fn after_response(&self, response: &mut super::client::HttpResponse) -> Result<()> {
         if self.verbose {
-            println!("← {} {} ({}ms)", response.status, response.status_text, response.duration_ms);
+            println!(
+                "← {} {} ({}ms)",
+                response.status, response.status_text, response.duration_ms
+            );
         }
         Ok(())
     }

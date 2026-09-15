@@ -28,27 +28,20 @@ impl<'a> Header<'a> {
     pub fn render(&self, frame: &mut Frame, area: Rect) {
         let header = Layout::default()
             .direction(Direction::Horizontal)
-            .constraints([
-                Constraint::Percentage(50),
-                Constraint::Percentage(50),
-            ])
+            .constraints([Constraint::Percentage(50), Constraint::Percentage(50)])
             .split(area);
 
-        let title = Paragraph::new(vec![
-            Line::from(vec![
-                Span::styled("🚀 ", self.theme.style_accent()),
-                Span::styled(self.title, self.theme.style_bold()),
-            ]),
-        ]);
+        let title = Paragraph::new(vec![Line::from(vec![
+            Span::styled("🚀 ", self.theme.style_accent()),
+            Span::styled(self.title, self.theme.style_bold()),
+        ])]);
 
-        let version = Paragraph::new(vec![
-            Line::from(vec![
-                Span::styled("v", self.theme.style_dim()),
-                Span::styled(self.version, self.theme.style_primary()),
-                Span::styled(" | ", self.theme.style_dim()),
-                Span::styled("⚡ AI Mode: ON", self.theme.style_success()),
-            ]),
-        ])
+        let version = Paragraph::new(vec![Line::from(vec![
+            Span::styled("v", self.theme.style_dim()),
+            Span::styled(self.version, self.theme.style_primary()),
+            Span::styled(" | ", self.theme.style_dim()),
+            Span::styled("⚡ AI Mode: ON", self.theme.style_success()),
+        ])])
         .alignment(ratatui::layout::Alignment::Right);
 
         frame.render_widget(title, header[0]);
@@ -86,12 +79,15 @@ impl<'a> StatusBar<'a> {
 
     pub fn render(&self, frame: &mut Frame, area: Rect) {
         let mut spans = Vec::new();
-        
+
         for (i, item) in self.items.iter().enumerate() {
             if i > 0 {
                 spans.push(Span::styled(" │ ", self.theme.style_dim()));
             }
-            spans.push(Span::styled(format!("{}: ", item.label), self.theme.style_dim()));
+            spans.push(Span::styled(
+                format!("{}: ", item.label),
+                self.theme.style_dim(),
+            ));
             spans.push(Span::styled(item.value.to_string(), item.style));
         }
 

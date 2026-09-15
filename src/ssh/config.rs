@@ -39,12 +39,10 @@ impl Default for SSHConfig {
 
 impl SSHConfig {
     pub fn from_file(path: &PathBuf) -> Result<Self> {
-        let content = std::fs::read_to_string(path)
-            .context("Failed to read SSH config")?;
-        
-        let config: Self = toml::from_str(&content)
-            .context("Failed to parse SSH config")?;
-        
+        let content = std::fs::read_to_string(path).context("Failed to read SSH config")?;
+
+        let config: Self = toml::from_str(&content).context("Failed to parse SSH config")?;
+
         Ok(config)
     }
 
@@ -58,54 +56,57 @@ impl SSHConfig {
     }
 
     pub fn to_args(&self) -> Vec<String> {
-        let mut args = vec![
-            "-p".to_string(),
-            self.port.to_string(),
-        ];
-        
+        let mut args = vec!["-p".to_string(), self.port.to_string()];
+
         if let Some(key) = &self.identity_file {
             args.push("-i".to_string());
             args.push(key.clone());
         }
-        
+
         if self.forward_agent {
             args.push("-A".to_string());
         }
-        
+
         if self.forward_x11 {
             args.push("-X".to_string());
         }
-        
+
         if self.compression {
             args.push("-C".to_string());
         }
-        
+
         args.push("-o".to_string());
-        args.push(format!("StrictHostKeyChecking={}", self.strict_host_key_checking));
-        
+        args.push(format!(
+            "StrictHostKeyChecking={}",
+            self.strict_host_key_checking
+        ));
+
         args.push("-o".to_string());
-        args.push(format!("ServerAliveInterval={}", self.server_alive_interval));
-        
+        args.push(format!(
+            "ServerAliveInterval={}",
+            self.server_alive_interval
+        ));
+
         args
     }
 
     pub fn parse_ssh_config_file(path: &PathBuf) -> Result<Vec<Self>> {
         let mut configs = Vec::new();
-        
+
         if !path.exists() {
             return Ok(configs);
         }
-        
+
         let content = std::fs::read_to_string(path)?;
         let mut current_host: Option<String> = None;
         let mut config = Self::default();
-        
+
         for line in content.lines() {
             let line = line.trim();
             if line.is_empty() || line.starts_with('#') {
                 continue;
             }
-            
+
             if let Some(host) = line.strip_prefix("Host ") {
                 if let Some(h) = current_host.take() {
                     config.host = h;
@@ -131,12 +132,12 @@ impl SSHConfig {
                 config.compression = true;
             }
         }
-        
+
         if let Some(h) = current_host {
             config.host = h;
             configs.push(config);
         }
-        
+
         Ok(configs)
     }
 }

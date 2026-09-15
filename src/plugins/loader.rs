@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
-use std::path::{Path, PathBuf};
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
+use std::path::{Path, PathBuf};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PluginManifest {
@@ -51,28 +51,28 @@ pub struct PluginLoader {
 impl PluginLoader {
     pub fn new() -> Self {
         let mut dirs = Vec::new();
-        
+
         // User plugins directory
         if let Some(home) = dirs::home_dir() {
             dirs.push(home.join(".terminalflow").join("plugins"));
         }
-        
+
         // System plugins directory
         dirs.push(PathBuf::from("/usr/local/share/terminalflow/plugins"));
         dirs.push(PathBuf::from("/usr/share/terminalflow/plugins"));
-        
+
         Self { plugin_dirs: dirs }
     }
 
     pub fn discover_plugins(&self) -> Result<Vec<PluginManifest>> {
         let mut plugins = Vec::new();
-        
+
         for dir in &self.plugin_dirs {
             if dir.exists() {
                 self.scan_directory(dir, &mut plugins)?;
             }
         }
-        
+
         Ok(plugins)
     }
 
@@ -94,21 +94,21 @@ impl PluginLoader {
     }
 
     fn load_manifest(&self, path: &Path) -> Result<PluginManifest> {
-        let content = std::fs::read_to_string(path)
-            .context("Failed to read plugin manifest")?;
-        
-        let manifest: PluginManifest = toml::from_str(&content)
-            .context("Failed to parse plugin manifest")?;
-        
+        let content = std::fs::read_to_string(path).context("Failed to read plugin manifest")?;
+
+        let manifest: PluginManifest =
+            toml::from_str(&content).context("Failed to parse plugin manifest")?;
+
         Ok(manifest)
     }
 
     pub fn load_plugin(&self, manifest: &PluginManifest) -> Result<LoadedPlugin> {
-        let plugin_dir = self.find_plugin_dir(&manifest.name)
+        let plugin_dir = self
+            .find_plugin_dir(&manifest.name)
             .context("Plugin directory not found")?;
-        
+
         let entry_point = plugin_dir.join(&manifest.entry_point);
-        
+
         Ok(LoadedPlugin {
             manifest: manifest.clone(),
             directory: plugin_dir,
@@ -141,8 +141,7 @@ impl LoadedPlugin {
             .args(args)
             .output()
             .context("Failed to execute plugin command")?;
-        
-        String::from_utf8(output.stdout)
-            .context("Failed to parse plugin output")
+
+        String::from_utf8(output.stdout).context("Failed to parse plugin output")
     }
 }

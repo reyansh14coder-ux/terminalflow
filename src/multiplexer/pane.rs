@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use anyhow::Result;
-use std::process::{Command, Child, Stdio};
+use std::process::{Child, Command, Stdio};
 
 pub struct Pane {
     name: String,
@@ -18,11 +18,11 @@ impl Pane {
 
     pub fn run(&mut self, command: &str) -> Result<()> {
         let child = Command::new("sh")
-            .args(&["-c", command])
+            .args(["-c", command])
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .spawn()?;
-        
+
         self.process = Some(child);
         Ok(())
     }
@@ -30,11 +30,11 @@ impl Pane {
     #[cfg(target_os = "windows")]
     pub fn run_windows(&mut self, command: &str) -> Result<()> {
         let child = Command::new("cmd")
-            .args(&["/C", command])
+            .args(["/C", command])
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .spawn()?;
-        
+
         self.process = Some(child);
         Ok(())
     }

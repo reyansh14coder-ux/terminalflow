@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
-use std::collections::HashMap;
-use anyhow::Result;
 use super::loader::{LoadedPlugin, PluginLoader};
+use anyhow::Result;
+use std::collections::HashMap;
 
 pub struct PluginManager {
     plugins: HashMap<String, LoadedPlugin>,
@@ -19,7 +19,7 @@ impl PluginManager {
 
     pub fn discover_and_load(&mut self) -> Result<()> {
         let manifests = self.loader.discover_plugins()?;
-        
+
         for manifest in manifests {
             match self.loader.load_plugin(&manifest) {
                 Ok(plugin) => {
@@ -31,14 +31,21 @@ impl PluginManager {
                 }
             }
         }
-        
+
         Ok(())
     }
 
-    pub fn execute_command(&self, plugin_name: &str, command: &str, args: &[String]) -> Result<String> {
-        let plugin = self.plugins.get(plugin_name)
+    pub fn execute_command(
+        &self,
+        plugin_name: &str,
+        command: &str,
+        args: &[String],
+    ) -> Result<String> {
+        let plugin = self
+            .plugins
+            .get(plugin_name)
             .ok_or_else(|| anyhow::anyhow!("Plugin '{}' not found", plugin_name))?;
-        
+
         plugin.execute_command(command, args)
     }
 
@@ -53,10 +60,10 @@ impl PluginManager {
     pub fn install_plugin(&mut self, source: &str) -> Result<()> {
         // Download and install plugin from source
         println!("📥 Installing plugin from {}...", source);
-        
+
         // In real implementation, this would clone/download the plugin
         // For now, we'll simulate it
-        
+
         println!("✅ Plugin installed successfully!");
         Ok(())
     }

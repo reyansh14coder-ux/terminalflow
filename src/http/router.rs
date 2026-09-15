@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
-use std::collections::HashMap;
 use anyhow::Result;
+use std::collections::HashMap;
 
 type Handler = Box<dyn Fn(Request) -> Response + Send + Sync>;
 

@@ -42,7 +42,9 @@ impl Session {
     }
 
     pub fn get_active_pane(&self) -> Option<&Pane> {
-        self.active_pane.as_ref().and_then(|name| self.panes.get(name))
+        self.active_pane
+            .as_ref()
+            .and_then(|name| self.panes.get(name))
     }
 
     pub fn set_active_pane(&mut self, name: &str) -> bool {

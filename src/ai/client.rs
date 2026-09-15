@@ -36,12 +36,12 @@ pub async fn ask(question: &str) -> Result<()> {
     println!("{}", "🤖 TerminalFlow AI".cyan().bold());
     println!("{}", "─".repeat(50).dimmed());
     println!();
-    
+
     let api_key = std::env::var("OPENAI_API_KEY")
         .context("Please set OPENAI_API_KEY environment variable")?;
 
     let client = Client::new();
-    
+
     let request = ChatRequest {
         model: "gpt-4".to_string(),
         messages: vec![
@@ -59,7 +59,7 @@ pub async fn ask(question: &str) -> Result<()> {
     };
 
     println!("{}", "Thinking...".yellow());
-    
+
     let response = client
         .post("https://api.openai.com/v1/chat/completions")
         .header("Authorization", format!("Bearer {}", api_key))
@@ -68,20 +68,17 @@ pub async fn ask(question: &str) -> Result<()> {
         .await
         .context("Failed to send request to OpenAI")?;
 
-    let chat_response: ChatResponse = response
-        .json()
-        .await
-        .context("Failed to parse response")?;
+    let chat_response: ChatResponse = response.json().await.context("Failed to parse response")?;
 
     println!();
     println!("{}", "📝 Response:".green().bold());
     println!("{}", "─".repeat(50).dimmed());
     println!();
-    
+
     for line in chat_response.choices[0].message.content.lines() {
         println!("  {}", line);
     }
-    
+
     println!();
     println!("{}", "─".repeat(50).dimmed());
 
@@ -93,7 +90,7 @@ pub async fn review_code(code: &str) -> Result<()> {
         .context("Please set OPENAI_API_KEY environment variable")?;
 
     let client = Client::new();
-    
+
     let request = ChatRequest {
         model: "gpt-4".to_string(),
         messages: vec![
@@ -118,19 +115,16 @@ pub async fn review_code(code: &str) -> Result<()> {
         .await
         .context("Failed to send request")?;
 
-    let chat_response: ChatResponse = response
-        .json()
-        .await
-        .context("Failed to parse response")?;
+    let chat_response: ChatResponse = response.json().await.context("Failed to parse response")?;
 
     println!("{}", "🔍 Code Review".cyan().bold());
     println!("{}", "─".repeat(50).dimmed());
     println!();
-    
+
     for line in chat_response.choices[0].message.content.lines() {
         println!("  {}", line);
     }
-    
+
     println!();
     println!("{}", "─".repeat(50).dimmed());
 
@@ -142,7 +136,7 @@ pub async fn generate_commit_message(diff: &str) -> Result<String> {
         .context("Please set OPENAI_API_KEY environment variable")?;
 
     let client = Client::new();
-    
+
     let request = ChatRequest {
         model: "gpt-4".to_string(),
         messages: vec![
@@ -167,10 +161,7 @@ pub async fn generate_commit_message(diff: &str) -> Result<String> {
         .await
         .context("Failed to send request")?;
 
-    let chat_response: ChatResponse = response
-        .json()
-        .await
-        .context("Failed to parse response")?;
+    let chat_response: ChatResponse = response.json().await.context("Failed to parse response")?;
 
     Ok(chat_response.choices[0].message.content.trim().to_string())
 }

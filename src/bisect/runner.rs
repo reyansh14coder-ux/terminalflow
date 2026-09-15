@@ -34,7 +34,7 @@ impl GitBisect {
         }
 
         let output = Command::new("git")
-            .args(&["bisect", "start"])
+            .args(["bisect", "start"])
             .output()
             .context("Failed to start git bisect")?;
 
@@ -44,14 +44,12 @@ impl GitBisect {
         }
 
         for bad in &self.bad_commits {
-            Command::new("git")
-                .args(&["bisect", "bad", bad])
-                .output()?;
+            Command::new("git").args(["bisect", "bad", bad]).output()?;
         }
 
         for good in &self.good_commits {
             Command::new("git")
-                .args(&["bisect", "good", good])
+                .args(["bisect", "good", good])
                 .output()?;
         }
 
@@ -65,27 +63,25 @@ impl GitBisect {
 
     pub fn run_test(&mut self) -> Result<BisectResult> {
         let output = Command::new("sh")
-            .args(&["-c", &self.test_command])
+            .args(["-c", &self.test_command])
             .output()
             .context("Failed to run test command")?;
 
         let success = output.status.success();
-        
+
         // Get current commit
-        let commit_output = Command::new("git")
-            .args(&["rev-parse", "HEAD"])
-            .output()?;
-        
+        let commit_output = Command::new("git").args(["rev-parse", "HEAD"]).output()?;
+
         let commit = String::from_utf8_lossy(&commit_output.stdout)
             .trim()
             .to_string();
-        
+
         self.current_commit = Some(commit.clone());
 
         let mark = if success { "good" } else { "bad" };
-        
+
         let bisect_output = Command::new("git")
-            .args(&["bisect", mark])
+            .args(["bisect", mark])
             .output()
             .context("Failed to mark commit")?;
 
@@ -107,14 +103,17 @@ impl GitBisect {
     pub fn auto_bisect(&mut self) -> Result<Option<String>> {
         loop {
             let result = self.run_test()?;
-            
+
             match result {
                 BisectResult::Found { culprit_commit, .. } => {
                     println!("🎯 Found the culprit commit: {}", culprit_commit);
                     return Ok(Some(culprit_commit));
                 }
                 BisectResult::Continue { current_commit, .. } => {
-                    println!("📝 Testing commit: {}", &current_commit[..7.min(current_commit.len())]);
+                    println!(
+                        "📝 Testing commit: {}",
+                        &current_commit[..7.min(current_commit.len())]
+                    );
                 }
             }
         }
@@ -122,7 +121,7 @@ impl GitBisect {
 
     pub fn visualize(&self) -> Result<String> {
         let output = Command::new("git")
-            .args(&["bisect", "log"])
+            .args(["bisect", "log"])
             .output()
             .context("Failed to get bisect log")?;
 
@@ -131,7 +130,7 @@ impl GitBisect {
 
     pub fn reset(&self) -> Result<()> {
         Command::new("git")
-            .args(&["bisect", "reset"])
+            .args(["bisect", "reset"])
             .output()
             .context("Failed to reset bisect")?;
 

@@ -13,23 +13,30 @@ pub async fn show() -> Result<()> {
 
     println!("  {} System Resources", "📊".cyan().bold());
     println!();
-    
+
     // CPU bar
     let cpu_bar = "█".repeat(cpu_usage as usize / 5) + &"░".repeat(20 - cpu_usage as usize / 5);
-    let _cpu_color = if cpu_usage > 80 { "red" } else if cpu_usage > 60 { "yellow" } else { "green" };
+    let _cpu_color = if cpu_usage > 80 {
+        "red"
+    } else if cpu_usage > 60 {
+        "yellow"
+    } else {
+        "green"
+    };
     println!("  CPU:     {} {}%", cpu_bar.cyan(), cpu_usage);
     println!();
-    
+
     // Memory bar
-    let mem_bar = "█".repeat(memory_usage as usize / 5) + &"░".repeat(20 - memory_usage as usize / 5);
+    let mem_bar =
+        "█".repeat(memory_usage as usize / 5) + &"░".repeat(20 - memory_usage as usize / 5);
     println!("  Memory:  {} {}%", mem_bar.green(), memory_usage);
     println!();
-    
+
     // Disk bar
     let disk_bar = "█".repeat(disk_usage as usize / 5) + &"░".repeat(20 - disk_usage as usize / 5);
     println!("  Disk:    {} {}%", disk_bar.blue(), disk_usage);
     println!();
-    
+
     println!("{}", "─".repeat(50).dimmed());
     println!();
     println!("  {} Press 'q' to exit", "💡 Tip:".dimmed());

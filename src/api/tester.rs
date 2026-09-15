@@ -51,7 +51,7 @@ impl APITester {
 
     pub async fn run_test(&self, test_case: &TestCase) -> TestResult {
         let start = std::time::Instant::now();
-        
+
         let client = match super::client::APIClient::new() {
             Ok(c) => c,
             Err(e) => {
@@ -67,25 +67,25 @@ impl APITester {
                 };
             }
         };
-        
-        let response = client.execute(
-            &super::client::APIRequest {
+
+        let response = client
+            .execute(&super::client::APIRequest {
                 method: test_case.request.method.clone(),
                 url: test_case.request.url.clone(),
                 headers: test_case.request.headers.clone(),
                 body: test_case.request.body.clone(),
                 timeout: test_case.request.timeout,
                 follow_redirects: true,
-            },
-        ).await;
-        
+            })
+            .await;
+
         let duration = start.elapsed().as_millis() as u64;
-        
+
         match response {
             Ok(resp) => {
                 let mut results = Vec::new();
                 let mut all_passed = true;
-                
+
                 for assertion in &test_case.assertions {
                     let result = self.check_assertion(assertion, &resp);
                     if !result.passed {
@@ -93,7 +93,7 @@ impl APITester {
                     }
                     results.push(result);
                 }
-                
+
                 TestResult {
                     name: test_case.name.clone(),
                     passed: all_passed,
@@ -114,7 +114,11 @@ impl APITester {
         }
     }
 
-    fn check_assertion(&self, assertion: &Assertion, response: &super::client::APIResponse) -> AssertionResult {
+    fn check_assertion(
+        &self,
+        assertion: &Assertion,
+        response: &super::client::APIResponse,
+    ) -> AssertionResult {
         match assertion {
             Assertion::StatusCode(expected) => {
                 let passed = response.status == *expected;
@@ -182,35 +186,48 @@ impl APITester {
 
     pub async fn run_all(&self) -> Vec<TestResult> {
         let mut results = Vec::new();
-        
+
         for test_case in &self.test_cases {
             println!("Running test: {}", test_case.name);
             let result = self.run_test(test_case).await;
             results.push(result);
         }
-        
+
         results
     }
 
     pub fn print_results(&self, results: &[TestResult]) {
         let passed = results.iter().filter(|r| r.passed).count();
         let failed = results.len() - passed;
-        
+
         println!("\n📊 Test Results:");
-        println!("════════════════════════════════════════════════════════════════════════════════");
-        
+        println!(
+            "════════════════════════════════════════════════════════════════════════════════"
+        );
+
         for result in results {
-            let status = if result.passed { "✅ PASS" } else { "❌ FAIL" };
+            let status = if result.passed {
+                "✅ PASS"
+            } else {
+                "❌ FAIL"
+            };
             println!("{} {} ({}ms)", status, result.name, result.duration_ms);
-            
+
             for assertion_result in &result.assertions {
                 if !assertion_result.passed {
                     println!("   └─ {}", assertion_result.message);
                 }
             }
         }
-        
-        println!("════════════════════════════════════════════════════════════════════════════════");
-        println!("Total: {} | Passed: {} | Failed: {}", results.len(), passed, failed);
+
+        println!(
+            "════════════════════════════════════════════════════════════════════════════════"
+        );
+        println!(
+            "Total: {} | Passed: {} | Failed: {}",
+            results.len(),
+            passed,
+            failed
+        );
     }
 }

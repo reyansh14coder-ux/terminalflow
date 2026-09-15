@@ -8,15 +8,20 @@ pub async fn manage() -> Result<()> {
     println!();
 
     let output = Command::new("docker")
-        .args(["ps", "-a", "--format", "table {{.Names}}\t{{.Status}}\t{{.Image}}"])
+        .args([
+            "ps",
+            "-a",
+            "--format",
+            "table {{.Names}}\t{{.Status}}\t{{.Image}}",
+        ])
         .output()?;
 
     if output.status.success() {
         let containers = String::from_utf8_lossy(&output.stdout);
-        
+
         println!("{}", "Containers:".green().bold());
         println!();
-        
+
         for line in containers.lines() {
             if line.contains("Up") {
                 println!("  {} {}", "✅".green(), line);
@@ -33,7 +38,8 @@ pub async fn manage() -> Result<()> {
     println!();
     println!("{}", "─".repeat(50).dimmed());
     println!();
-    println!("  {} Start  {} Stop   {} Restart   {} Logs",
+    println!(
+        "  {} Start  {} Stop   {} Restart   {} Logs",
         "[s]".green(),
         "[x]".red(),
         "[r]".yellow(),

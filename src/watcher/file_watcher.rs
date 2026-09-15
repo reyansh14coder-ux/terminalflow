@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use std::sync::mpsc::{self, Receiver};
 use std::time::{Duration, SystemTime};
 
-use super::event::{FileEvent, EventType};
+use super::event::{EventType, FileEvent};
 
 pub struct FileWatcher {
     path: PathBuf,
@@ -29,26 +29,21 @@ impl FileWatcher {
 
     pub fn watch(&mut self) -> Result<Receiver<FileEvent>> {
         let (sender, receiver) = mpsc::channel();
-        
+
         let path = self.path.clone();
         let interval = self.interval;
-        
+
         std::thread::spawn(move || {
-            let mut last_modified = std::fs::metadata(&path)
-                .and_then(|m| m.modified())
-                .ok();
-            
+            let mut last_modified = std::fs::metadata(&path).and_then(|m| m.modified()).ok();
+
             loop {
                 std::thread::sleep(interval);
-                
+
                 if let Ok(metadata) = std::fs::metadata(&path) {
                     if let Ok(modified) = metadata.modified() {
                         if let Some(last) = last_modified {
                             if modified > last {
-                                let event = FileEvent::new(
-                                    EventType::Modified,
-                                    path.clone(),
-                                );
+                                let event = FileEvent::new(EventType::Modified, path.clone());
                                 let _ = sender.send(event);
                                 last_modified = Some(modified);
                             }
@@ -59,7 +54,7 @@ impl FileWatcher {
                 }
             }
         });
-        
+
         Ok(receiver)
     }
 
@@ -67,19 +62,17 @@ impl FileWatcher {
         let (sender, receiver) = mpsc::channel();
         let path = self.path.clone();
         let interval = self.interval;
-        
-        std::thread::spawn(move || {
-            loop {
-                std::thread::sleep(interval);
-                
-                if path.exists() {
-                    let event = FileEvent::new(EventType::Created, path.clone());
-                    let _ = sender.send(event);
-                    break;
-                }
+
+        std::thread::spawn(move || loop {
+            std::thread::sleep(interval);
+
+            if path.exists() {
+                let event = FileEvent::new(EventType::Created, path.clone());
+                let _ = sender.send(event);
+                break;
             }
         });
-        
+
         Ok(receiver)
     }
 
@@ -87,25 +80,25 @@ impl FileWatcher {
         let (sender, receiver) = mpsc::channel();
         let path = self.path.clone();
         let interval = self.interval;
-        
+
         std::thread::spawn(move || {
             let mut existed = path.exists();
-            
+
             loop {
                 std::thread::sleep(interval);
-                
+
                 let exists = path.exists();
-                
+
                 if existed && !exists {
                     let event = FileEvent::new(EventType::Deleted, path.clone());
                     let _ = sender.send(event);
                     break;
                 }
-                
+
                 existed = exists;
             }
         });
-        
+
         Ok(receiver)
     }
 }

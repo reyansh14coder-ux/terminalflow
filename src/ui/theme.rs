@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use ratatui::style::{Color, Style, Modifier};
+use ratatui::style::{Color, Modifier, Style};
 
 pub struct Theme {
     pub primary: Color,

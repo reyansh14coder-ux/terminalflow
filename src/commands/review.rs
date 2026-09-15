@@ -9,9 +9,7 @@ pub async fn review(target: &str) -> Result<()> {
 
     let diff = if target == "HEAD" {
         // Review staged changes or last commit
-        let output = Command::new("git")
-            .args(["diff", "--cached"])
-            .output()?;
+        let output = Command::new("git").args(["diff", "--cached"]).output()?;
 
         if output.stdout.is_empty() {
             Command::new("git")

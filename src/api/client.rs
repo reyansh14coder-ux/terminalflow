@@ -40,7 +40,7 @@ impl APIClient {
             .timeout(std::time::Duration::from_secs(30))
             .build()
             .context("Failed to create HTTP client")?;
-        
+
         Ok(Self {
             client,
             base_url: None,
@@ -55,7 +55,8 @@ impl APIClient {
     }
 
     pub fn set_header(&mut self, key: &str, value: &str) {
-        self.default_headers.insert(key.to_string(), value.to_string());
+        self.default_headers
+            .insert(key.to_string(), value.to_string());
     }
 
     pub async fn get(&self, path: &str) -> Result<APIResponse> {
@@ -66,7 +67,8 @@ impl APIClient {
             body: None,
             timeout: None,
             follow_redirects: true,
-        }).await
+        })
+        .await
     }
 
     pub async fn post(&self, path: &str, body: Option<String>) -> Result<APIResponse> {
@@ -77,7 +79,8 @@ impl APIClient {
             body,
             timeout: None,
             follow_redirects: true,
-        }).await
+        })
+        .await
     }
 
     pub async fn execute(&self, request: &APIRequest) -> Result<APIResponse> {
@@ -89,41 +92,50 @@ impl APIClient {
                 None => request.url.clone(),
             }
         };
-        
+
         let start = std::time::Instant::now();
-        
+
         let mut req = match request.method.as_str() {
             "GET" => self.client.get(&url),
             "POST" => self.client.post(&url),
             "PUT" => self.client.put(&url),
             "DELETE" => self.client.delete(&url),
             "PATCH" => self.client.patch(&url),
-            _ => return Err(anyhow::anyhow!("Unsupported HTTP method: {}", request.method)),
+            _ => {
+                return Err(anyhow::anyhow!(
+                    "Unsupported HTTP method: {}",
+                    request.method
+                ))
+            }
         };
-        
+
         for (key, value) in &request.headers {
             req = req.header(key.as_str(), value.as_str());
         }
-        
+
         for (key, value) in &self.default_headers {
             req = req.header(key.as_str(), value.as_str());
         }
-        
+
         if let Some(body) = &request.body {
             req = req.body(body.clone());
         }
-        
+
         let response = req.send().await.context("Request failed")?;
         let duration = start.elapsed().as_millis() as u64;
-        
+
         let status = response.status().as_u16();
-        let headers: HashMap<String, String> = response.headers()
+        let headers: HashMap<String, String> = response
+            .headers()
             .iter()
             .map(|(k, v)| (k.to_string(), v.to_str().unwrap_or("").to_string()))
             .collect();
-        
-        let body = response.text().await.context("Failed to read response body")?;
-        
+
+        let body = response
+            .text()
+            .await
+            .context("Failed to read response body")?;
+
         Ok(APIResponse {
             status,
             headers,

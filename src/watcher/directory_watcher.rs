@@ -1,12 +1,12 @@
 #![allow(dead_code)]
 
 use anyhow::Result;
+use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::mpsc::{self, Receiver};
 use std::time::{Duration, SystemTime};
-use std::collections::HashMap;
 
-use super::event::{FileEvent, EventType};
+use super::event::{EventType, FileEvent};
 
 pub struct DirectoryWatcher {
     path: PathBuf,
@@ -51,49 +51,48 @@ impl DirectoryWatcher {
         let interval = self.interval;
         let recursive = self.recursive;
         let ignore_patterns = self.ignore_patterns.clone();
-        
+
         std::thread::spawn(move || {
             let mut file_states: HashMap<PathBuf, SystemTime> = HashMap::new();
-            
+
             if let Ok(entries) = scan_directory(&path, recursive, &ignore_patterns) {
                 for (entry_path, modified) in entries {
                     file_states.insert(entry_path, modified);
                 }
             }
-            
+
             loop {
                 std::thread::sleep(interval);
-                
+
                 if let Ok(entries) = scan_directory(&path, recursive, &ignore_patterns) {
                     let mut current_files: HashMap<PathBuf, SystemTime> = HashMap::new();
-                    
+
                     for (entry_path, modified) in entries {
                         current_files.insert(entry_path.clone(), modified);
-                        
+
                         if !file_states.contains_key(&entry_path) {
                             let event = FileEvent::new(EventType::Created, entry_path.clone());
                             let _ = sender.send(event);
-                        }
-                        else if let Some(last_modified) = file_states.get(&entry_path) {
+                        } else if let Some(last_modified) = file_states.get(&entry_path) {
                             if modified > *last_modified {
                                 let event = FileEvent::new(EventType::Modified, entry_path.clone());
                                 let _ = sender.send(event);
                             }
                         }
                     }
-                    
+
                     for entry_path in file_states.keys() {
                         if !current_files.contains_key(entry_path) {
                             let event = FileEvent::new(EventType::Deleted, entry_path.clone());
                             let _ = sender.send(event);
                         }
                     }
-                    
+
                     file_states = current_files;
                 }
             }
         });
-        
+
         Ok(receiver)
     }
 }
@@ -104,25 +103,27 @@ fn scan_directory(
     ignore_patterns: &[String],
 ) -> Result<Vec<(PathBuf, SystemTime)>> {
     let mut entries = Vec::new();
-    
+
     if let Ok(dir_entries) = std::fs::read_dir(path) {
         for entry in dir_entries.flatten() {
             let entry_path = entry.path();
-            
-            let should_ignore = ignore_patterns.iter().any(|pattern| {
-                entry_path.to_string_lossy().contains(pattern)
-            });
-            
+
+            let should_ignore = ignore_patterns
+                .iter()
+                .any(|pattern| entry_path.to_string_lossy().contains(pattern));
+
             if should_ignore {
                 continue;
             }
-            
+
             if let Ok(metadata) = entry.metadata() {
                 if let Ok(modified) = metadata.modified() {
                     entries.push((entry_path.clone(), modified));
-                    
+
                     if recursive && metadata.is_dir() {
-                        if let Ok(sub_entries) = scan_directory(&entry_path, recursive, ignore_patterns) {
+                        if let Ok(sub_entries) =
+                            scan_directory(&entry_path, recursive, ignore_patterns)
+                        {
                             entries.extend(sub_entries);
                         }
                     }
@@ -130,6 +131,6 @@ fn scan_directory(
             }
         }
     }
-    
+
     Ok(entries)
 }

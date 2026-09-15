@@ -211,10 +211,7 @@ fn ui(f: &mut ratatui::Frame, app: &App, theme: &Theme, size: Rect) {
 fn render_git_tab(f: &mut ratatui::Frame, area: Rect, theme: &Theme) {
     let chunks = Layout::default()
         .direction(Direction::Horizontal)
-        .constraints([
-            Constraint::Percentage(50),
-            Constraint::Percentage(50),
-        ])
+        .constraints([Constraint::Percentage(50), Constraint::Percentage(50)])
         .split(area);
 
     let git_info = InfoBox::new("🔥 Git Status", theme)

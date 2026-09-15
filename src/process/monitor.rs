@@ -121,11 +121,10 @@ impl ProcessMonitor {
     }
 
     pub fn find_process(&self, query: &str) -> Vec<&ProcessInfo> {
-        self.processes.iter()
+        self.processes
+            .iter()
             .filter(|p| {
-                p.name.contains(query)
-                    || p.command.contains(query)
-                    || p.pid.to_string() == query
+                p.name.contains(query) || p.command.contains(query) || p.pid.to_string() == query
             })
             .collect()
     }
@@ -140,7 +139,7 @@ impl ProcessMonitor {
         #[cfg(windows)]
         {
             std::process::Command::new("taskkill")
-                .args(&["/PID", &pid.to_string(), "/F"])
+                .args(["/PID", &pid.to_string(), "/F"])
                 .output()
                 .context("Failed to kill process")?;
         }
@@ -155,7 +154,7 @@ impl ProcessMonitor {
 
     pub fn get_top_memory(&self, limit: usize) -> Vec<&ProcessInfo> {
         let mut processes: Vec<&ProcessInfo> = self.processes.iter().collect();
-        processes.sort_by(|a, b| b.memory_usage.cmp(&a.memory_usage));
+        processes.sort_by_key(|a| std::cmp::Reverse(a.memory_usage));
         processes.into_iter().take(limit).collect()
     }
 }

@@ -52,7 +52,7 @@ impl ProcessWatcher {
 
     pub fn start_watching(&mut self) -> Result<()> {
         println!("👀 Starting process watcher...");
-        
+
         loop {
             for process in &mut self.watched_processes {
                 match process.status {
@@ -72,13 +72,14 @@ impl ProcessWatcher {
                     _ => {}
                 }
             }
-            
+
             std::thread::sleep(self.interval);
         }
     }
 
     pub fn get_status(&self) -> Vec<(String, WatchStatus)> {
-        self.watched_processes.iter()
+        self.watched_processes
+            .iter()
             .map(|p| (p.name.clone(), p.status.clone()))
             .collect()
     }

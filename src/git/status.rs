@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
-use std::path::Path;
 use anyhow::Result;
 use git2::{Repository, Status, StatusOptions};
+use std::path::Path;
 
 #[derive(Debug, Clone)]
 pub struct GitStatus {
@@ -19,26 +19,26 @@ pub struct GitStatus {
 impl GitStatus {
     pub fn from_repo(path: &Path) -> Result<Self> {
         let repo = Repository::open(path)?;
-        
+
         let head = repo.head()?;
         let branch = head.shorthand().unwrap_or("HEAD").to_string();
-        
+
         let mut options = StatusOptions::new();
         options.include_untracked(true);
         options.recurse_untracked_dirs(true);
-        
+
         let statuses = repo.statuses(Some(&mut options))?;
-        
+
         let mut modified = Vec::new();
         let mut added = Vec::new();
         let mut deleted = Vec::new();
         let mut untracked = Vec::new();
         let mut staged = Vec::new();
-        
+
         for entry in statuses.iter() {
             let path = entry.path().unwrap_or("").to_string();
             let status = entry.status();
-            
+
             if status.contains(Status::WT_MODIFIED) {
                 modified.push(path.clone());
             }
@@ -55,7 +55,7 @@ impl GitStatus {
                 added.push(path.clone());
             }
         }
-        
+
         Ok(Self {
             branch,
             modified,
@@ -78,10 +78,7 @@ impl GitStatus {
                 "src/lib.rs".to_string(),
                 "src/utils.rs".to_string(),
             ],
-            added: vec![
-                "src/ai.rs".to_string(),
-                "src/dashboard.rs".to_string(),
-            ],
+            added: vec!["src/ai.rs".to_string(), "src/dashboard.rs".to_string()],
             deleted: Vec::new(),
             untracked: vec!["temp.txt".to_string()],
             staged: Vec::new(),

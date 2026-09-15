@@ -20,15 +20,13 @@ pub async fn run() -> Result<()> {
         if Command::new(cmd).arg("--version").output().is_ok() {
             println!("  {} Detected {} project", "✅".green(), lang.cyan());
             println!();
-            
-            let output = Command::new(cmd)
-                .args(&args)
-                .output()?;
+
+            let output = Command::new(cmd).args(&args).output()?;
 
             if output.status.success() {
                 println!("  {} Tests passed!", "✅".green().bold());
                 println!();
-                
+
                 let stdout = String::from_utf8_lossy(&output.stdout);
                 let lines: Vec<&str> = stdout.lines().collect();
                 for line in lines.iter().rev().take(5) {

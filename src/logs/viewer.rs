@@ -127,8 +127,11 @@ impl LogViewer {
     }
 
     pub fn search(&self, query: &str) -> Vec<&LogEntry> {
-        self.entries.iter()
-            .filter(|e| e.message.contains(query) || e.source.as_deref().unwrap_or("").contains(query))
+        self.entries
+            .iter()
+            .filter(|e| {
+                e.message.contains(query) || e.source.as_deref().unwrap_or("").contains(query)
+            })
             .collect()
     }
 
@@ -142,7 +145,7 @@ impl LogViewer {
 
     pub fn stats(&self) -> LogStats {
         let mut stats = LogStats::default();
-        
+
         for entry in &self.entries {
             match entry.level {
                 LogLevel::Trace => stats.trace += 1,
@@ -154,7 +157,7 @@ impl LogViewer {
             }
             stats.total += 1;
         }
-        
+
         stats
     }
 }

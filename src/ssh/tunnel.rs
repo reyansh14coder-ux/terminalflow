@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use anyhow::{Context, Result};
-use std::process::{Command, Child, Stdio};
+use std::process::{Child, Command, Stdio};
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
@@ -36,7 +36,10 @@ impl SSHTunnel {
         let output = Command::new("ssh")
             .args([
                 "-L",
-                &format!("{}:{}:{}", self.local_port, self.remote_host, self.remote_port),
+                &format!(
+                    "{}:{}:{}",
+                    self.local_port, self.remote_host, self.remote_port
+                ),
                 "-N",
                 "-f",
                 &format!("{}@{}", self.ssh_user, self.ssh_host),
@@ -45,14 +48,14 @@ impl SSHTunnel {
             .stderr(Stdio::null())
             .spawn()
             .context("Failed to start SSH tunnel")?;
-        
+
         self.process = Some(output);
-        
+
         println!(
             "✅ SSH tunnel established: localhost:{} -> {}:{} via {}@{}",
             self.local_port, self.remote_host, self.remote_port, self.ssh_user, self.ssh_host
         );
-        
+
         Ok(())
     }
 
@@ -94,7 +97,11 @@ pub enum TunnelStatus {
 impl std::fmt::Display for TunnelStatus {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            TunnelStatus::Running { local_port, remote_host, remote_port } => {
+            TunnelStatus::Running {
+                local_port,
+                remote_host,
+                remote_port,
+            } => {
                 write!(
                     f,
                     "✅ Running: localhost:{} -> {}:{}",

@@ -9,9 +9,7 @@ pub async fn generate(use_ai: bool) -> Result<()> {
 
     if use_ai {
         // Get the diff
-        let diff = Command::new("git")
-            .args(["diff", "--cached"])
-            .output()?;
+        let diff = Command::new("git").args(["diff", "--cached"]).output()?;
 
         let diff_str = String::from_utf8_lossy(&diff.stdout);
 
@@ -21,9 +19,9 @@ pub async fn generate(use_ai: bool) -> Result<()> {
         }
 
         println!("{}", "🤖 Generating commit message with AI...".yellow());
-        
+
         let message = crate::ai::client::generate_commit_message(&diff_str).await?;
-        
+
         println!();
         println!("{}", "📝 Suggested commit message:".green().bold());
         println!();

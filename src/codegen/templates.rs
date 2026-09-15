@@ -10,9 +10,11 @@ pub struct TemplateEngine {
 impl TemplateEngine {
     pub fn new() -> Self {
         let mut templates = HashMap::new();
-        
+
         // Rust struct template
-        templates.insert("rust_struct".to_string(), r#"pub struct {name} {
+        templates.insert(
+            "rust_struct".to_string(),
+            r#"pub struct {name} {
 {fields}
 }
 
@@ -22,10 +24,14 @@ impl {name} {
 {init_fields}
         }
     }
-}"#.to_string());
+}"#
+            .to_string(),
+        );
 
         // Rust enum template
-        templates.insert("rust_enum".to_string(), r#"pub enum {name} {
+        templates.insert(
+            "rust_enum".to_string(),
+            r#"pub enum {name} {
 {variants}
 }
 
@@ -35,19 +41,27 @@ impl {name} {
 {match_arms}
         }
     }
-}"#.to_string());
+}"#
+            .to_string(),
+        );
 
         // API handler template
-        templates.insert("api_handler".to_string(), r#"pub async fn {name}(req: Request) -> Response {
+        templates.insert(
+            "api_handler".to_string(),
+            r#"pub async fn {name}(req: Request) -> Response {
     let body = req.body;
     
     // TODO: Implement logic
     
     Response::ok("{{}}")
-}"#.to_string());
+}"#
+            .to_string(),
+        );
 
         // Test template
-        templates.insert("test".to_string(), r#"#[cfg(test)]
+        templates.insert(
+            "test".to_string(),
+            r#"#[cfg(test)]
 mod tests {
     use super::*;
 
@@ -55,10 +69,14 @@ mod tests {
     fn test_{name}() {
         // TODO: Implement test
     }
-}"#.to_string());
+}"#
+            .to_string(),
+        );
 
         // CLI command template
-        templates.insert("cli_command".to_string(), r#"/// {description}
+        templates.insert(
+            "cli_command".to_string(),
+            r#"/// {description}
 #[derive(Parser)]
 pub struct {name} {{
 {args}
@@ -69,26 +87,35 @@ impl {name} {{
         // TODO: Implement command
         Ok(())
     }}
-}}"#.to_string());
+}}"#
+            .to_string(),
+        );
 
         Self { templates }
     }
 
-    pub fn render(&self, template_name: &str, variables: &HashMap<String, String>) -> Result<String> {
-        let template = self.templates.get(template_name)
+    pub fn render(
+        &self,
+        template_name: &str,
+        variables: &HashMap<String, String>,
+    ) -> Result<String> {
+        let template = self
+            .templates
+            .get(template_name)
             .context(format!("Template '{}' not found", template_name))?;
-        
+
         let mut result = template.clone();
-        
+
         for (key, value) in variables {
             result = result.replace(&format!("{{{}}}", key), value);
         }
-        
+
         Ok(result)
     }
 
     pub fn add_template(&mut self, name: &str, template: &str) {
-        self.templates.insert(name.to_string(), template.to_string());
+        self.templates
+            .insert(name.to_string(), template.to_string());
     }
 
     pub fn list_templates(&self) -> Vec<&str> {

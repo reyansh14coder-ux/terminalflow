@@ -15,7 +15,7 @@ impl LogAnalyzer {
 
     pub fn analyze(&self) -> LogAnalysis {
         let mut analysis = LogAnalysis::default();
-        
+
         for entry in &self.entries {
             match entry.level {
                 LogLevel::Trace => analysis.level_counts.trace += 1,
@@ -25,25 +25,26 @@ impl LogAnalyzer {
                 LogLevel::Error => analysis.level_counts.error += 1,
                 LogLevel::Fatal => analysis.level_counts.fatal += 1,
             }
-            
+
             if let Some(source) = &entry.source {
                 *analysis.source_counts.entry(source.clone()).or_insert(0) += 1;
             }
-            
+
             if entry.level == LogLevel::Error || entry.level == LogLevel::Fatal {
                 let pattern = extract_error_pattern(&entry.message);
                 *analysis.error_patterns.entry(pattern).or_insert(0) += 1;
             }
         }
-        
+
         analysis.error_rate = if analysis.level_counts.total() > 0 {
-            (analysis.level_counts.error + analysis.level_counts.fatal) as f64 / analysis.level_counts.total() as f64
+            (analysis.level_counts.error + analysis.level_counts.fatal) as f64
+                / analysis.level_counts.total() as f64
         } else {
             0.0
         };
-        
+
         analysis.time_gaps = self.find_time_gaps();
-        
+
         analysis
     }
 
@@ -52,7 +53,8 @@ impl LogAnalyzer {
     }
 
     pub fn search_errors(&self, pattern: &str) -> Vec<&LogEntry> {
-        self.entries.iter()
+        self.entries
+            .iter()
             .filter(|e| {
                 (e.level == LogLevel::Error || e.level == LogLevel::Fatal)
                     && e.message.contains(pattern)
@@ -62,30 +64,32 @@ impl LogAnalyzer {
 
     pub fn get_error_trend(&self, window_size: usize) -> Vec<(usize, usize)> {
         let mut trend = Vec::new();
-        
+
         for i in 0..self.entries.len() {
-            let start = if i >= window_size { i - window_size } else { 0 };
+            let start = i.saturating_sub(window_size);
             let window: Vec<&LogEntry> = self.entries[start..=i].iter().collect();
-            let error_count = window.iter()
+            let error_count = window
+                .iter()
                 .filter(|e| e.level == LogLevel::Error || e.level == LogLevel::Fatal)
                 .count();
             trend.push((i, error_count));
         }
-        
+
         trend
     }
 
     pub fn find_repeated_errors(&self, threshold: usize) -> Vec<(String, usize)> {
         let mut error_counts: HashMap<String, usize> = HashMap::new();
-        
+
         for entry in &self.entries {
             if entry.level == LogLevel::Error || entry.level == LogLevel::Fatal {
                 let pattern = extract_error_pattern(&entry.message);
                 *error_counts.entry(pattern).or_insert(0) += 1;
             }
         }
-        
-        error_counts.into_iter()
+
+        error_counts
+            .into_iter()
             .filter(|(_, count)| *count >= threshold)
             .collect()
     }
@@ -124,11 +128,8 @@ pub struct TimeGap {
 }
 
 fn extract_error_pattern(message: &str) -> String {
-    let pattern: String = message
-        .chars()
-        .filter(|c| !c.is_numeric())
-        .collect();
-    
+    let pattern: String = message.chars().filter(|c| !c.is_numeric()).collect();
+
     if pattern.len() > 100 {
         pattern[..100].to_string()
     } else {

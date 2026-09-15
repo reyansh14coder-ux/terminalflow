@@ -33,148 +33,148 @@ struct Cli {
 enum Commands {
     /// Start the interactive dashboard
     Dashboard,
-    
+
     /// Ask AI a question
     Ai {
         /// Your question
         #[arg(trailing_var_arg = true)]
         question: Vec<String>,
     },
-    
+
     /// Auto-fix the last error
     Fix,
-    
+
     /// Generate commit message with AI
     Commit {
         /// Use AI to generate message
         #[arg(long)]
         ai: bool,
     },
-    
+
     /// Review code
     Review {
         /// Commit or file to review
         #[arg(default_value = "HEAD")]
         target: String,
     },
-    
+
     /// Show Git status with style
     Status,
-    
+
     /// Manage Docker containers
     Docker,
-    
+
     /// Run tests with beautiful output
     Test,
-    
+
     /// System monitor
     Monitor,
-    
+
     /// Plugin management
     Plugin {
         #[command(subcommand)]
         command: PluginCommands,
     },
-    
+
     /// Secret manager
     Secret {
         #[command(subcommand)]
         command: SecretCommands,
     },
-    
+
     /// SSH tunnel management
     Ssh {
         #[command(subcommand)]
         command: SshCommands,
     },
-    
+
     /// HTTP client
     Http {
         /// HTTP method
         #[arg(default_value = "GET")]
         method: String,
-        
+
         /// URL
         url: String,
-        
+
         /// Request body
         #[arg(short, long)]
         body: Option<String>,
     },
-    
+
     /// API testing
     Api {
         #[command(subcommand)]
         command: ApiCommands,
     },
-    
+
     /// Process monitor
     Ps {
         /// Filter by name
         #[arg(short, long)]
         filter: Option<String>,
-        
+
         /// Show top CPU processes
         #[arg(short, long)]
         top_cpu: bool,
-        
+
         /// Show top memory processes
         #[arg(short, long)]
         top_mem: bool,
     },
-    
+
     /// Kill a process
     Kill {
         /// Process ID
         pid: u32,
     },
-    
+
     /// Watch files for changes
     Watch {
         /// Path to watch
         path: String,
-        
+
         /// Command to run on change
         #[arg(short, long)]
         command: Option<String>,
     },
-    
+
     /// View and analyze logs
     Logs {
         /// Log file path
         file: String,
-        
+
         /// Filter by level
         #[arg(short, long)]
         level: Option<String>,
-        
+
         /// Search pattern
         #[arg(short, long)]
         search: Option<String>,
-        
+
         /// Tail last N lines
         #[arg(short, long, default_value = "50")]
         tail: usize,
     },
-    
+
     /// Generate code
     Gen {
         #[command(subcommand)]
         command: GenCommands,
     },
-    
+
     /// Git bisect automation
     Bisect {
         #[command(subcommand)]
         command: BisectCommands,
     },
-    
+
     /// Manage secrets vault
     Vault {
         #[command(subcommand)]
         command: VaultCommands,
     },
-    
+
     /// Start API server
     Serve {
         /// Port to listen on
@@ -216,7 +216,11 @@ enum SshCommands {
     /// List connections
     List,
     /// Add a connection
-    Add { name: String, host: String, user: String },
+    Add {
+        name: String,
+        host: String,
+        user: String,
+    },
     /// Start a tunnel
     Tunnel {
         #[arg(short, long)]
@@ -303,32 +307,33 @@ async fn main() -> Result<()> {
         Some(Commands::Monitor) => {
             commands::monitor::show().await?;
         }
-        Some(Commands::Plugin { command }) => {
-            match command {
-                PluginCommands::List => {
-                    let mut manager = plugins::PluginManager::new();
-                    manager.discover_and_load()?;
-                    for plugin in manager.list_plugins() {
-                        println!("📦 {} v{}", plugin.manifest.name, plugin.manifest.version);
-                    }
-                }
-                PluginCommands::Install { source } => {
-                    let mut manager = plugins::PluginManager::new();
-                    manager.install_plugin(&source)?;
-                }
-                PluginCommands::Uninstall { name } => {
-                    let mut manager = plugins::PluginManager::new();
-                    manager.uninstall_plugin(&name)?;
-                }
-                PluginCommands::Search { query } => {
-                    let registry = plugins::PluginRegistry::new();
-                    let results = registry.search(&query);
-                    for plugin in results {
-                        println!("📦 {} - {} (⬇️ {} downloads)", plugin.name, plugin.description, plugin.downloads);
-                    }
+        Some(Commands::Plugin { command }) => match command {
+            PluginCommands::List => {
+                let mut manager = plugins::PluginManager::new();
+                manager.discover_and_load()?;
+                for plugin in manager.list_plugins() {
+                    println!("📦 {} v{}", plugin.manifest.name, plugin.manifest.version);
                 }
             }
-        }
+            PluginCommands::Install { source } => {
+                let mut manager = plugins::PluginManager::new();
+                manager.install_plugin(&source)?;
+            }
+            PluginCommands::Uninstall { name } => {
+                let mut manager = plugins::PluginManager::new();
+                manager.uninstall_plugin(&name)?;
+            }
+            PluginCommands::Search { query } => {
+                let registry = plugins::PluginRegistry::new();
+                let results = registry.search(&query);
+                for plugin in results {
+                    println!(
+                        "📦 {} - {} (⬇️ {} downloads)",
+                        plugin.name, plugin.description, plugin.downloads
+                    );
+                }
+            }
+        },
         Some(Commands::Secret { command }) => {
             let mut manager = secrets::SecretManager::new()?;
             match command {
@@ -369,7 +374,10 @@ async fn main() -> Result<()> {
                 }
                 SshCommands::List => {
                     for conn in manager.list() {
-                        println!("🖥️ {} - {}@{}:{}", conn.name, conn.user, conn.host, conn.port);
+                        println!(
+                            "🖥️ {} - {}@{}:{}",
+                            conn.name, conn.user, conn.host, conn.port
+                        );
                     }
                 }
                 SshCommands::Add { name, host, user } => {
@@ -384,8 +392,19 @@ async fn main() -> Result<()> {
                     manager.add(conn)?;
                     println!("✅ Connection '{}' added", name);
                 }
-                SshCommands::Tunnel { local_port, remote_host, remote_port, ssh_host } => {
-                    let mut tunnel = ssh::SSHTunnel::new(local_port, &remote_host, remote_port, &ssh_host, "root");
+                SshCommands::Tunnel {
+                    local_port,
+                    remote_host,
+                    remote_port,
+                    ssh_host,
+                } => {
+                    let mut tunnel = ssh::SSHTunnel::new(
+                        local_port,
+                        &remote_host,
+                        remote_port,
+                        &ssh_host,
+                        "root",
+                    );
                     tunnel.start()?;
                 }
             }
@@ -402,40 +421,50 @@ async fn main() -> Result<()> {
                 follow_redirects: true,
             };
             let response = client.execute(&request).await?;
-            println!("{} {} - {}ms", response.status, response.status_text, response.duration_ms);
+            println!(
+                "{} {} - {}ms",
+                response.status, response.status_text, response.duration_ms
+            );
             println!("{}", response.body);
         }
-        Some(Commands::Api { command }) => {
-            match command {
-                ApiCommands::Test { file } => {
-                    let _tester = api::APITester::new()?;
-                    println!("🧪 Running API tests from {}", file);
-                }
-                ApiCommands::Create { name } => {
-                    println!("📝 Creating API test: {}", name);
-                }
+        Some(Commands::Api { command }) => match command {
+            ApiCommands::Test { file } => {
+                let _tester = api::APITester::new()?;
+                println!("🧪 Running API tests from {}", file);
             }
-        }
-        Some(Commands::Ps { filter, top_cpu, top_mem }) => {
+            ApiCommands::Create { name } => {
+                println!("📝 Creating API test: {}", name);
+            }
+        },
+        Some(Commands::Ps {
+            filter,
+            top_cpu,
+            top_mem,
+        }) => {
             let mut monitor = process::ProcessMonitor::new();
             monitor.refresh()?;
-            
+
             let mut processes: Vec<process::ProcessInfo> = monitor.get_processes().to_vec();
-            
+
             if top_cpu {
                 processes.sort_by(|a, b| b.cpu_usage.partial_cmp(&a.cpu_usage).unwrap());
             } else if top_mem {
-                processes.sort_by(|a, b| b.memory_usage.cmp(&a.memory_usage));
+                processes.sort_by_key(|a| std::cmp::Reverse(a.memory_usage));
             }
-            
+
             if let Some(f) = filter {
                 processes.retain(|p| p.name.contains(&f) || p.command.contains(&f));
             }
-            
+
             println!("📊 Processes:");
             for proc in processes.iter().take(20) {
-                println!("  {} (PID: {}) - CPU: {:.1}% - Memory: {:.1}MB",
-                    proc.name, proc.pid, proc.cpu_usage, proc.memory_usage as f64 / 1024.0 / 1024.0);
+                println!(
+                    "  {} (PID: {}) - CPU: {:.1}% - Memory: {:.1}MB",
+                    proc.name,
+                    proc.pid,
+                    proc.cpu_usage,
+                    proc.memory_usage as f64 / 1024.0 / 1024.0
+                );
             }
         }
         Some(Commands::Kill { pid }) => {
@@ -446,12 +475,12 @@ async fn main() -> Result<()> {
         Some(Commands::Watch { path, command }) => {
             let mut watcher = watcher::FileWatcher::new(std::path::PathBuf::from(&path));
             let receiver = watcher.watch()?;
-            
+
             println!("👀 Watching {} for changes...", path);
-            
+
             for event in receiver.iter() {
                 println!("📝 {} - {:?}", event.event_type, event.path);
-                
+
                 if let Some(cmd) = &command {
                     println!("🏃 Running: {}", cmd);
                     #[cfg(unix)]
@@ -460,29 +489,34 @@ async fn main() -> Result<()> {
                         .status()?;
                     #[cfg(windows)]
                     std::process::Command::new("cmd")
-                        .args(&["/C", cmd])
+                        .args(["/C", cmd])
                         .status()?;
                 }
             }
         }
-        Some(Commands::Logs { file, level, search: _, tail }) => {
+        Some(Commands::Logs {
+            file,
+            level,
+            search: _,
+            tail,
+        }) => {
             let parser = logs::LogParser::new();
             let entries = parser.parse_file(std::path::Path::new(&file))?;
-            
+
             let mut viewer = logs::LogViewer::new();
-            
+
             if let Some(l) = level {
                 let log_level = logs::LogLevel::from_str(&l);
                 viewer = viewer.filter_level(log_level);
             }
-            
+
             for entry in entries {
                 viewer.add_entry(entry);
             }
-            
+
             let mut displayed = viewer.tail(tail);
             displayed.reverse();
-            
+
             for entry in displayed {
                 let level_str = match entry.level {
                     logs::LogLevel::Error | logs::LogLevel::Fatal => format!("❌ {}", entry.level),
@@ -497,43 +531,42 @@ async fn main() -> Result<()> {
             let generator = codegen::CodeGenerator::new(std::path::PathBuf::from("."));
             match command {
                 GenCommands::Struct { name } => {
-                    let code = generator.generate_struct(&name, &[
-                        ("id".to_string(), "u64".to_string()),
-                        ("name".to_string(), "String".to_string()),
-                    ])?;
+                    let code = generator.generate_struct(
+                        &name,
+                        &[
+                            ("id".to_string(), "u64".to_string()),
+                            ("name".to_string(), "String".to_string()),
+                        ],
+                    )?;
                     println!("{}", code);
                 }
                 GenCommands::Endpoint { method, path } => {
-                    let handler_name = path.replace('/', "_").replace('-', "_");
+                    let handler_name = path.replace(['/', '-'], "_");
                     let code = generator.generate_api_endpoint(&method, &path, &handler_name)?;
                     println!("{}", code);
                 }
                 GenCommands::Tests { name } => {
-                    let code = generator.generate_test(&name, &[
-                        ("test_basic", ""),
-                        ("test_edge_cases", ""),
-                    ])?;
+                    let code = generator
+                        .generate_test(&name, &[("test_basic", ""), ("test_edge_cases", "")])?;
                     println!("{}", code);
                 }
             }
         }
-        Some(Commands::Bisect { command }) => {
-            match command {
-                BisectCommands::Start { good, bad } => {
-                    let mut bisect = bisect::GitBisect::new("cargo test");
-                    bisect.add_good(&good);
-                    bisect.add_bad(&bad);
-                    bisect.start()?;
-                }
-                BisectCommands::Test => {
-                    println!("🔍 Running bisect test...");
-                }
-                BisectCommands::Reset => {
-                    let bisect = bisect::GitBisect::new("cargo test");
-                    bisect.reset()?;
-                }
+        Some(Commands::Bisect { command }) => match command {
+            BisectCommands::Start { good, bad } => {
+                let mut bisect = bisect::GitBisect::new("cargo test");
+                bisect.add_good(&good);
+                bisect.add_bad(&bad);
+                bisect.start()?;
             }
-        }
+            BisectCommands::Test => {
+                println!("🔍 Running bisect test...");
+            }
+            BisectCommands::Reset => {
+                let bisect = bisect::GitBisect::new("cargo test");
+                bisect.reset()?;
+            }
+        },
         Some(Commands::Vault { command }) => {
             let mut vault = secrets::SecretVault::new(std::path::PathBuf::from("."))?;
             match command {
