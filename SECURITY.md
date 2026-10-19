@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability within TerminalFlow, please send an email to your.email@example.com. All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within TerminalFlow, please report it privately through this repository's GitHub Security tab. All security vulnerabilities will be promptly addressed.
 
 ## Security Measures
 

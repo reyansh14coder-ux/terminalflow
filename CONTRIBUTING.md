@@ -75,12 +75,6 @@ Look for issues labeled:
 - `help wanted`
 - `documentation`
 
-## ❓ Questions?
-
-- 💬 Discord: [Join our server](https://discord.gg/terminalflow)
-- 📧 Email: your.email@example.com
-- 🐦 Twitter: [@terminalflow](https://twitter.com/terminalflow)
-
 ## 📜 Code of Conduct
 
 Please be respectful and inclusive. We welcome contributors of all backgrounds.

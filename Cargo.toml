@@ -2,12 +2,12 @@
 name = "terminalflow"
 version = "2.0.0"
 edition = "2021"
-authors = ["Your Name <your.email@example.com>"]
+authors = ["reyansh14coder-ux"]
 description = "🚀 AI-Powered Terminal Dashboard for Developers - The Ultimate Dev Toolkit with 20+ Extreme Features"
 license = "MIT"
 repository = "https://github.com/reyansh14coder-ux/terminalflow"
-homepage = "https://terminalflow.dev"
-documentation = "https://docs.terminalflow.dev"
+homepage = "https://github.com/reyansh14coder-ux/terminalflow"
+documentation = "https://github.com/reyansh14coder-ux/terminalflow#readme"
 readme = "README.md"
 keywords = ["terminal", "dashboard", "ai", "productivity", "cli", "developer-tools"]
 categories = ["command-line-utilities", "development-tools"]
