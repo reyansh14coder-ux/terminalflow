@@ -22,15 +22,15 @@ export default defineConfig({
   projects: [
     {
       name: 'api-tests',
-      testMatch: '**/*.api.spec.ts',
+      testMatch: '**/api-tests.spec.ts',
     },
     {
       name: 'cli-tests',
-      testMatch: '**/*.cli.spec.ts',
+      testMatch: '**/cli-tests.spec.ts',
     },
     {
       name: 'integration-tests',
-      testMatch: '**/*.integration.spec.ts',
+      testMatch: '**/integration-tests.spec.ts',
     },
   ],
 });

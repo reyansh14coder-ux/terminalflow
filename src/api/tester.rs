@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -45,8 +45,90 @@ impl APITester {
         })
     }
 
+    /// Load test cases from a JSON file: either `[{...}, {...}]` or
+    /// `{"tests": [{...}]}`.
+    pub fn load_file(&mut self, path: &str) -> Result<usize> {
+        let content = std::fs::read_to_string(path)
+            .with_context(|| format!("Could not read test file '{}'", path))?;
+
+        let parsed: serde_json::Value = serde_json::from_str(&content)
+            .with_context(|| format!("'{}' is not valid JSON", path))?;
+
+        let cases: Vec<TestCase> = if let Some(tests) = parsed.get("tests").and_then(|t| t.as_array())
+        {
+            serde_json::from_value(serde_json::Value::Array(tests.clone()))
+                .context("Test file has an invalid 'tests' array")?
+        } else if let Some(array) = parsed.as_array() {
+            serde_json::from_value(serde_json::Value::Array(array.clone()))
+                .context("Test file must be a JSON array of test cases")?
+        } else {
+            anyhow::bail!(
+                "'{}' must contain a JSON array of tests (or an object with a \"tests\" array)",
+                path
+            )
+        };
+
+        self.test_cases = cases;
+        Ok(self.test_cases.len())
+    }
+
+    /// Write a ready-to-edit example test file.
+    pub fn write_template(name: &str) -> Result<String> {
+        let file_name = if name.ends_with(".json") {
+            name.to_string()
+        } else {
+            format!("{}.api.json", name)
+        };
+
+        let template = serde_json::json!({
+            "tests": [
+                {
+                    "name": "health check returns 200",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://api.github.com/zen",
+                        "headers": { "Accept": "application/json" },
+                        "body": null,
+                        "timeout": 10,
+                        "follow_redirects": true
+                    },
+                    "assertions": [
+                        { "StatusCode": 200 },
+                        { "ResponseTimeLessThan": 3000 }
+                    ]
+                },
+                {
+                    "name": "users endpoint returns octocat",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://api.github.com/users/octocat",
+                        "headers": {},
+                        "body": null,
+                        "timeout": 10,
+                        "follow_redirects": true
+                    },
+                    "assertions": [
+                        { "StatusCode": 200 },
+                        { "BodyContains": "\"login\"" }
+                    ]
+                }
+            ]
+        });
+
+        std::fs::write(&file_name, serde_json::to_string_pretty(&template)?)?;
+        Ok(file_name)
+    }
+
     pub fn add_test_case(&mut self, test_case: TestCase) {
         self.test_cases.push(test_case);
+    }
+
+    pub fn len(&self) -> usize {
+        self.test_cases.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.test_cases.is_empty()
     }
 
     pub async fn run_test(&self, test_case: &TestCase) -> TestResult {

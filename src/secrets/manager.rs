@@ -17,6 +17,7 @@ pub struct Secret {
 pub struct SecretManager {
     secrets: HashMap<String, Secret>,
     vault_path: std::path::PathBuf,
+    encryption: super::encrypt::Encryption,
 }
 
 impl SecretManager {
@@ -28,9 +29,13 @@ impl SecretManager {
 
         std::fs::create_dir_all(&vault_path)?;
 
+        let encryption =
+            super::encrypt::Encryption::load_or_create_key(&vault_path.join(".key"))?;
+
         let mut manager = Self {
             secrets: HashMap::new(),
             vault_path,
+            encryption,
         };
 
         manager.load_secrets()?;
@@ -58,7 +63,7 @@ impl SecretManager {
 
         let secret = Secret {
             name: name.to_string(),
-            value: value.to_string(),
+            value: self.encryption.encrypt_str(value)?,
             description: description.map(|s| s.to_string()),
             tags: Vec::new(),
             created_at: now,
@@ -72,7 +77,10 @@ impl SecretManager {
     }
 
     pub fn get(&self, name: &str) -> Result<Option<String>> {
-        Ok(self.secrets.get(name).map(|s| s.value.clone()))
+        match self.secrets.get(name) {
+            Some(secret) => Ok(Some(self.encryption.decrypt_str(&secret.value)?)),
+            None => Ok(None),
+        }
     }
 
     pub fn delete(&mut self, name: &str) -> Result<bool> {
@@ -85,6 +93,14 @@ impl SecretManager {
 
     pub fn list(&self) -> Vec<&Secret> {
         self.secrets.values().collect()
+    }
+
+    /// Decrypted view of every secret (used by `export_env`).
+    pub fn values(&self) -> Result<Vec<(String, String)>> {
+        self.secrets
+            .values()
+            .map(|secret| Ok((secret.name.clone(), self.encryption.decrypt_str(&secret.value)?)))
+            .collect()
     }
 
     pub fn search(&self, query: &str) -> Vec<&Secret> {
@@ -126,9 +142,8 @@ impl SecretManager {
     pub fn export_env(&self, prefix: &str) -> Result<HashMap<String, String>> {
         let mut env_vars = HashMap::new();
 
-        for secret in self.secrets.values() {
-            let key = format!("{}{}", prefix, secret.name);
-            env_vars.insert(key, secret.value.clone());
+        for (name, value) in self.values()? {
+            env_vars.insert(format!("{}{}", prefix, name), value);
         }
 
         Ok(env_vars)

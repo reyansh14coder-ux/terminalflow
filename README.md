@@ -2,370 +2,220 @@
 
 # 🚀 TerminalFlow
 
-### The AI-Powered Terminal Dashboard That Will Change How You Code Forever
+### The AI-powered terminal dashboard that puts your whole dev workflow in one TUI
 
 [![GitHub Stars](https://img.shields.io/github/stars/reyansh14coder-ux/terminalflow?style=social)](https://github.com/reyansh14coder-ux/terminalflow/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/reyansh14coder-ux/terminalflow?style=social)](https://github.com/reyansh14coder-ux/terminalflow/network/members)
 [![GitHub Issues](https://img.shields.io/github/issues/reyansh14coder-ux/terminalflow)](https://github.com/reyansh14coder-ux/terminalflow/issues)
 [![License](https://img.shields.io/github/license/reyansh14coder-ux/terminalflow)](LICENSE)
-[![Downloads](https://img.shields.io/github/downloads/reyansh14coder-ux/terminalflow/total)](https://github.com/reyansh14coder-ux/terminalflow/releases)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/reyansh14coder-ux/terminalflow/ci.yml?branch=main)](https://github.com/reyansh14coder-ux/terminalflow/actions)
 
-[![TerminalFlow Demo](https://raw.githubusercontent.com/reyansh14coder-ux/terminalflow/main/assets/demo.png)](https://github.com/reyansh14coder-ux/terminalflow)
-
 </div>
-
----
-
-## 🎯 What is TerminalFlow?
-
-TerminalFlow is **NOT** just another terminal tool. It's a **complete development command center** with **20+ extreme features** that developers actually need.
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  🚀 TerminalFlow v2.0.0                          ⚡ AI Mode: ON           │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  📊 Dashboard         🤖 AI Assistant        🔐 Secrets Manager            │
-│  ─────────────────   ─────────────────────   ───────────────────────────   │
-│  • Git Status         • Code Review           • Encrypted Vault             │
-│  • Docker             • Auto Fix              • SSH Keys                    │
-│  • Process Monitor    • Code Generation       • API Keys                    │
-│  • System Stats       • Commit Messages       • Environment Import          │
-│                                                                             │
-│  🔌 Plugin System     🌐 HTTP Client         🔍 Log Viewer                 │
-│  ─────────────────   ─────────────────────   ───────────────────────────   │
-│  • Marketplace        • REST API Testing      • Real-time Analysis          │
-│  • Hot Reload         • Request History       • Error Detection             │
-│  • Custom Commands    • Response Parsing      • Pattern Search              │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## ✨ 20+ EXTREME FEATURES
-
-### 🧠 AI-Powered Features
-| Feature | Description |
-|---------|-------------|
-| 🤖 AI Assistant | Ask anything, get instant answers |
-| 📝 Code Review | AI reviews your code before push |
-| 🔧 Auto Fix | Paste error, get instant solution |
-| 💬 Commit Messages | Never write boring commits again |
-| 🎨 Code Generation | Generate structs, endpoints, tests |
-
-### 📊 Dashboard & Monitoring
-| Feature | Description |
-|---------|-------------|
-| 📊 Real-time Dashboard | Beautiful terminal UI |
-| 🐳 Docker Manager | Manage containers without leaving terminal |
-| 📈 System Monitor | CPU, Memory, Disk, Network stats |
-| ⚙️ Process Monitor | Track running processes |
-| 🔄 Git Integration | Full git workflow in one place |
-
-### 🔐 Security & Secrets
-| Feature | Description |
-|---------|-------------|
-| 🔐 Secret Manager | Encrypted secret storage |
-| 🔑 Vault System | Military-grade encryption |
-| 🌐 SSH Manager | Manage SSH connections |
-| 🔒 SSH Tunnels | Secure tunnel management |
-| 📁 Environment Import | Import secrets from env vars |
-
-### 🛠️ Development Tools
-| Feature | Description |
-|---------|-------------|
-| 🔌 Plugin System | Extend with custom plugins |
-| 🌐 HTTP Client | Full REST API testing |
-| 📋 API Testing | Automated API test suite |
-| 📁 File Watcher | Watch files for changes |
-| 📝 Log Viewer | Real-time log analysis |
-| 🔍 Git Bisect | Automated bug finder |
-| 🎨 Code Generator | Generate boilerplate code |
-
-### 🚀 Advanced Features
-| Feature | Description |
-|---------|-------------|
-| 🔌 Plugin Marketplace | Install community plugins |
-| 🔄 Hot Reload | Changes reflected instantly |
-| 📊 Performance Metrics | Track your productivity |
-| 🎨 Custom Themes | Cyberpunk, Ocean, Forest |
-| ⚡ Lightning Fast | Written in Rust |
-
----
-
-## 🚀 Quick Start
-
-### One-Line Install
-
-```bash
-# macOS / Linux
-curl -fsSL https://raw.githubusercontent.com/reyansh14coder-ux/terminalflow/main/install.sh | bash
-
-# Windows (PowerShell)
-irm https://raw.githubusercontent.com/reyansh14coder-ux/terminalflow/main/install.ps1 | iex
-```
-
-### Or Install with Package Managers
-
-```bash
-# Homebrew
-brew install terminalflow
-
-# Cargo (Rust)
-cargo install terminalflow
-
-# NPM (Global)
-npm install -g terminalflow
-
-# APT (Debian/Ubuntu)
-sudo apt install terminalflow
-```
-
-### Or Build from Source
-
-```bash
-git clone https://github.com/reyansh14coder-ux/terminalflow.git
-cd terminalflow
-cargo build --release
-cp target/release/terminalflow /usr/local/bin/
-```
-
----
-
-## 🎮 Usage
-
-### Start the Dashboard
-
-```bash
-terminalflow
-# or just
-tf
-```
-
-### Key Bindings
-
-| Key | Action |
-|-----|--------|
-| `g` | Git Dashboard |
-| `d` | Docker Manager |
-| `t` | Test Runner |
-| `m` | System Monitor |
-| `a` | AI Assistant |
-| `s` | Settings |
-| `?` | Help |
-| `q` | Quit |
-
-### AI Commands
-
-```bash
-# Ask AI anything
-tf ai "how do I reverse a linked list in Python?"
-
-# Auto-fix last error
-tf fix
-
-# Generate commit message
-tf commit --ai
-
-# Code review
-tf review HEAD
-
-# Generate code
-tf gen struct MyStruct
-tf gen endpoint POST /api/users
-tf gen tests my_function
-```
-
-### Secret Management
-
-```bash
-# Set a secret
-tf secret set DATABASE_URL "postgres://..."
-
-# Get a secret
-tf secret get DATABASE_URL
-
-# Import from environment
-tf secret import AWS_
-```
-
-### HTTP Client
-
-```bash
-# GET request
-tf http GET https://api.github.com/users/octocat
-
-# POST with body
-tf http POST https://api.example.com/data -b '{"key":"value"}'
-```
-
-### Process Management
-
-```bash
-# List processes
-tf ps
-
-# Filter by name
-tf ps --filter node
-
-# Top CPU consumers
-tf ps --top-cpu
-
-# Kill process
-tf kill 1234
-```
-
-### Log Analysis
-
-```bash
-# View logs
-tf logs /var/log/app.log
-
-# Filter by level
-tf logs app.log --level error
-
-# Search pattern
-tf logs app.log --search "timeout"
-
-# Tail last 100 lines
-tf logs app.log --tail 100
-```
 
 ---
 
 ## 📸 Screenshots
 
-<div align="center">
+Real screenshots generated from the running app — regenerate them any time with
+`tf screenshot` + `python assets/render_screenshots.py`.
 
-![Dashboard](https://raw.githubusercontent.com/reyansh14coder-ux/terminalflow/main/assets/screenshot-dashboard.png)
+| 📊 Git | 🧪 Tests |
+|--------|----------|
+| ![Git status](assets/git.png) | ![Test results](assets/tests.png) |
 
-![Git View](https://raw.githubusercontent.com/reyansh14coder-ux/terminalflow/main/assets/screenshot-git.png)
+| 📈 Monitor | 🐳 Docker |
+|------------|-----------|
+| ![System monitor](assets/monitor.png) | ![Docker containers](assets/docker.png) |
 
-![AI Assistant](https://raw.githubusercontent.com/reyansh14coder-ux/terminalflow/main/assets/screenshot-ai.png)
-
-![Secret Manager](https://raw.githubusercontent.com/reyansh14coder-ux/terminalflow/main/assets/screenshot-secrets.png)
-
-</div>
-
----
-
-## 🛠️ Built With
-
-- **[Rust](https://rust-lang.org)** - Core language for blazing speed
-- **[ratatui](https://github.com/ratatui-org/ratatui)** - Beautiful terminal UI
-- **[ratatui](https://ratatui.rs)** - Terminal UI framework
-- **[Git2](https://github.com/rust-lang/git2-rs)** - Native Git integration
-- **[Reqwest](https://github.com/seanmonstar/reqwest)** - HTTP client
-- **[Tokio](https://tokio.rs)** - Async runtime
+| 🤖 AI |
+|-------|
+| ![AI assistant](assets/ai.png) |
 
 ---
 
-## 📦 Architecture
+## ❓ What is TerminalFlow?
 
-```
-terminalflow/
-├── src/
-│   ├── main.rs           # CLI entry point
-│   ├── ai/               # AI features (GPT-4)
-│   ├── api/              # API client & server
-│   ├── bisect/           # Git bisect automation
-│   ├── codegen/          # Code generation
-│   ├── commands/         # Command implementations
-│   ├── git/              # Git integration
-│   ├── http/             # HTTP client & router
-│   ├── logs/             # Log viewer & analyzer
-│   ├── multiplexer/      # Terminal multiplexer
-│   ├── plugins/          # Plugin system
-│   ├── process/          # Process monitoring
-│   ├── secrets/          # Secret management
-│   ├── ssh/              # SSH management
-│   ├── ui/               # Terminal UI
-│   └── watcher/          # File watcher
-├── tests/                # E2E tests
-└── Cargo.toml            # Dependencies
-```
+TerminalFlow is a single binary that replaces a folder full of half-remembered
+commands: it shows your git state, system health, tests, containers and logs in
+one interactive dashboard, and gives you sharp CLI subcommands for everything
+else — **working offline, with AI as an optional upgrade**.
+
+Everything you see is real data:
+
+- `tf ps` / `tf monitor` — live processes, CPU, memory, disk via `sysinfo`
+- `tf status` — real git status (staged / modified / untracked / ahead / behind)
+- `tf test` — detects and runs `cargo`, `npm`, `pytest` or `go`
+- `tf secret` / `tf vault` — encrypted at rest (XChaCha20-Poly1305 + PBKDF2)
+- `tf review` / `tf commit` — work offline; upgrade to AI by setting a key
 
 ---
 
-## 📦 Features Roadmap
+## ⚡ Quick Start
 
-- [x] 🎨 Beautiful Terminal UI
-- [x] 📊 Git Dashboard
-- [x] 🤖 AI Assistant
-- [x] 🐳 Docker Integration
-- [x] 🔐 Secret Manager
-- [x] 🔑 Vault System
-- [x] 🌐 SSH Management
-- [x] 📡 HTTP Client
-- [x] 🔌 Plugin System
-- [x] 📁 File Watcher
-- [x] 📝 Log Viewer
-- [x] 🔍 Git Bisect
-- [x] 🎨 Code Generator
-- [x] ⚙️ Process Monitor
-- [ ] 📱 Mobile Companion App
-- [ ] 🌐 Web Dashboard
-- [ ] 📈 Team Analytics
-- [ ] 🎓 Interactive Tutorials
-- [ ] 🔗 CI/CD Integration
+### Build from source
 
----
-
-## 🤝 Contributing
-
-We love contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+Requires [Rust](https://rustup.rs) (1.70+) and `git`:
 
 ```bash
-# Quick start for contributors
 git clone https://github.com/reyansh14coder-ux/terminalflow.git
 cd terminalflow
-make dev
+cargo build --release
+./target/release/terminalflow --help
+```
+
+### Prebuilt binaries
+
+Windows / Linux / macOS builds are published on the
+[Releases page](https://github.com/reyansh14coder-ux/terminalflow/releases)
+(generated by CI when a version tag is pushed).
+
+### Run it
+
+```bash
+tf                    # interactive dashboard (or: tf dashboard)
+tf status             # styled git status
+tf ps -c              # processes by CPU
+tf monitor            # CPU / memory / disk + top processes
+tf test               # run the project's test suite
+tf review src/        # offline static review (AI if a key is set)
+tf commit             # commit message from the diff (offline)
 ```
 
 ---
 
-## 📜 License
+## 🎮 Dashboard keys
 
-MIT License - see [LICENSE](LICENSE) for details.
-
----
-
-## 💬 Community
-
-- **Discord**: [Join our server](https://discord.gg/terminalflow)
-- **Twitter**: [@terminalflow](https://twitter.com/terminalflow)
-- **Reddit**: r/terminalflow
+| Key | Action |
+|-----|--------|
+| `Tab` / `Shift+Tab` | Next / previous panel |
+| `g` `d` `t` `m` `a` | Jump to Git / Docker / Tests / Monitor / AI |
+| `r` | Refresh the active panel (re-run tests on the Tests panel) |
+| `q`, then `y` | Quit |
 
 ---
 
-## ⭐ Star History
+## 🔧 Commands
 
-If you find TerminalFlow useful, please give it a star! It helps others discover the project.
+| Command | What it does |
+|---------|--------------|
+| `tf dashboard` | Interactive TUI (default when run with no args) |
+| `tf status` | Real git status: branch, staged, modified, untracked, ahead/behind |
+| `tf commit [--ai]` | Conventional commit message from the staged diff |
+| `tf review [path]` | Static review of the working diff — offline, or AI when a key is set |
+| `tf fix` | Reads the last build error (or piped input) and suggests fixes |
+| `tf test` | Detects cargo / npm / pytest / go and runs the suite |
+| `tf ps [-c\|-m]` | Live process table, sorted by CPU or memory |
+| `tf kill <pid>` | Kill a process (taskkill on Windows, kill on unix) |
+| `tf monitor` | CPU, memory, disk bars + top processes |
+| `tf logs <file>` | Parse logs: tail, `--level`, `--search`, stats summary |
+| `tf http GET <url>` | HTTP client with `-H`, `--timeout`, JSON body via `--data` |
+| `tf api create <name>` | Scaffold an API test file |
+| `tf api test <file>` | Run API tests, report pass/fail |
+| `tf secret set/get/list/delete` | Secrets encrypted at rest |
+| `tf secret import <prefix>` | Import matching env vars into the vault |
+| `tf vault unlock/lock/store/get/list/backup/restore` | Password-protected vault (PBKDF2 + XChaCha20-Poly1305) |
+| `tf plugin list/search/install/uninstall/update` | Local folder or git-URL plugins |
+| `tf ssh add/connect/list/remove` | Saved SSH connections |
+| `tf docker` | Container list (needs Docker, gracefully absent otherwise) |
+| `tf bisect start/test/reset` | Git bisect driven by `TF_BISECT_CMD` (default `cargo test`) |
+| `tf gen struct/endpoint/tests` | Code scaffolding |
+| `tf watch <path> -- <cmd>` | Re-run a command when files change |
+| `tf serve [--port]` | Tiny HTTP server with `/health` |
+| `tf ai "<question>"` | AI assistant |
+| `tf screenshot` | Render the dashboard tabs to JSON (builds the screenshots above) |
+
+---
+
+## 🤖 AI setup (optional)
+
+AI features light up when an API key is present — everything else works without one:
+
+```bash
+# Windows (PowerShell)
+$env:OPENAI_API_KEY = "sk-…"
+
+# macOS / Linux
+export OPENAI_API_KEY=sk-…
+```
+
+- `tf ai`, `tf commit --ai`, `tf review --ai` use the key
+- Without a key: `tf commit` builds a message from your diff offline,
+  `tf review` runs the built-in static checks, and `tf ai` explains how to
+  enable AI instead of failing
+- Model/base URL overrides: `OPENAI_MODEL`, `OPENAI_BASE_URL`, `TF_OPENAI_API_KEY`
+
+---
+
+## 🔐 Secrets & vault
+
+```bash
+tf secret set DATABASE_URL "postgres://…"   # stored encrypted (AES-GCM-class AEAD)
+tf secret get DATABASE_URL                  # decrypted on read
+tf secret import AWS_                       # pull AWS_* env vars in
+tf secret export-env --prefix MY_           # print as shell exports
+
+tf vault unlock                             # password prompt (or TF_VAULT_PASSWORD)
+tf vault store API_KEY "value"
+tf vault get API_KEY
+tf vault backup vault-backup.json           # entries stay encrypted
+```
+
+- Secrets are encrypted at rest with a key file in `~/.terminalflow/secrets/.key`
+- The vault derives its key from your password (PBKDF2-HMAC-SHA256, 60k rounds)
+- Values written before encryption existed still read fine (plaintext passthrough)
+
+---
+
+## 🧪 Testing
+
+```bash
+cargo test          # Rust unit tests
+npm install && npm test   # Playwright e2e (tests/e2e)
+```
+
+Regenerate the screenshots:
+
+```bash
+tf screenshot --out assets/dashboard.json
+python assets/render_screenshots.py     # needs Pillow: pip install pillow
+```
+
+---
+
+## 🛠 Built With
+
+- [ratatui](https://github.com/ratatui/ratatui) + [crossterm](https://github.com/crossterm-rs/crossterm) — TUI
+- [sysinfo](https://github.com/GuillaumeGomez/sysinfo) — processes, CPU, memory, disks
+- [git2](https://github.com/rust-lang/git2-rs) — git status without shelling out
+- [reqwest](https://github.com/seanmonstar/reqwest) — HTTP client/server
+- [clap](https://github.com/clap-rs/clap), [tokio](https://github.com/tokio-rs/tokio), [serde](https://github.com/serde-rs/serde)
+- [chacha20poly1305](https://github.com/RustCrypto/AEADs) + [pbkdf2](https://github.com/RustCrypto/KDFs) — secret storage
+
+---
+
+## 🗺 Roadmap
+
+- [ ] Timeline view for git history inside the dashboard
+- [ ] Remote ahead/behind badge refresh while the dashboard is open
+- [ ] More log formats (journald, JSON lines)
+- [ ] Plugin marketplace index
+
+Contributions welcome — see [CONTRIBUTING](CONTRIBUTING.md) and open an
+[issue](https://github.com/reyansh14coder-ux/terminalflow/issues) or a
+[pull request](https://github.com/reyansh14coder-ux/terminalflow/pulls).
+
+---
+
+## 📄 License
+
+MIT — see [LICENSE](LICENSE).
+
+---
 
 <div align="center">
 
-[![Star History Chart](https://api.star-history.com/svg?repos=reyansh14coder-ux/terminalflow&type=Date)](https://star-history.com/#reyansh14coder-ux/terminalflow&Date)
-
-</div>
-
----
-
-## 🙏 Acknowledgments
-
-- Inspired by [lazygit](https://github.com/jesseduffield/lazygit), [starship](https://github.com/starship/starship), [atuin](https://github.com/atuinsh/atuin)
-- UI components from [ratatui](https://github.com/ratatui-org/ratatui)
-- Terminal UI powered by ratatui
-
----
-
-<div align="center">
-
-**Made with ❤️ by developers, for developers**
-
-**20+ Features | Lightning Fast | Open Source**
-
-[⬆ Back to Top](#-terminalflow)
+**[Report a bug](https://github.com/reyansh14coder-ux/terminalflow/issues)** ·
+**[Request a feature](https://github.com/reyansh14coder-ux/terminalflow/issues)** ·
+**[Releases](https://github.com/reyansh14coder-ux/terminalflow/releases)**
 
 </div>

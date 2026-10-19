@@ -11,16 +11,23 @@ use ratatui::{
 use super::theme::Theme;
 
 pub struct Header<'a> {
-    title: &'a str,
-    version: &'a str,
+    title: String,
+    version: String,
+    right: String,
     theme: &'a Theme,
 }
 
 impl<'a> Header<'a> {
-    pub fn new(title: &'a str, version: &'a str, theme: &'a Theme) -> Self {
+    pub fn new(
+        title: impl Into<String>,
+        version: impl Into<String>,
+        right: impl Into<String>,
+        theme: &'a Theme,
+    ) -> Self {
         Self {
-            title,
-            version,
+            title: title.into(),
+            version: version.into(),
+            right: right.into(),
             theme,
         }
     }
@@ -33,14 +40,14 @@ impl<'a> Header<'a> {
 
         let title = Paragraph::new(vec![Line::from(vec![
             Span::styled("🚀 ", self.theme.style_accent()),
-            Span::styled(self.title, self.theme.style_bold()),
+            Span::styled(self.title.clone(), self.theme.style_bold()),
         ])]);
 
         let version = Paragraph::new(vec![Line::from(vec![
             Span::styled("v", self.theme.style_dim()),
-            Span::styled(self.version, self.theme.style_primary()),
+            Span::styled(self.version.clone(), self.theme.style_primary()),
             Span::styled(" | ", self.theme.style_dim()),
-            Span::styled("⚡ AI Mode: ON", self.theme.style_success()),
+            Span::styled(self.right.clone(), self.theme.style_success()),
         ])])
         .alignment(ratatui::layout::Alignment::Right);
 
@@ -50,13 +57,13 @@ impl<'a> Header<'a> {
 }
 
 pub struct StatusBar<'a> {
-    items: Vec<StatusItem<'a>>,
+    items: Vec<StatusItem>,
     theme: &'a Theme,
 }
 
-pub struct StatusItem<'a> {
-    pub label: &'a str,
-    pub value: &'a str,
+pub struct StatusItem {
+    pub label: String,
+    pub value: String,
     pub style: Style,
 }
 
@@ -68,10 +75,15 @@ impl<'a> StatusBar<'a> {
         }
     }
 
-    pub fn add_item(mut self, label: &'a str, value: &'a str, style: Style) -> Self {
+    pub fn add_item(
+        mut self,
+        label: impl Into<String>,
+        value: impl Into<String>,
+        style: Style,
+    ) -> Self {
         self.items.push(StatusItem {
-            label,
-            value,
+            label: label.into(),
+            value: value.into(),
             style,
         });
         self
@@ -88,7 +100,7 @@ impl<'a> StatusBar<'a> {
                 format!("{}: ", item.label),
                 self.theme.style_dim(),
             ));
-            spans.push(Span::styled(item.value.to_string(), item.style));
+            spans.push(Span::styled(item.value.clone(), item.style));
         }
 
         let status = Paragraph::new(Line::from(spans));
@@ -97,16 +109,16 @@ impl<'a> StatusBar<'a> {
 }
 
 pub struct InfoBox<'a> {
-    title: &'a str,
+    title: String,
     content: Vec<Line<'a>>,
     theme: &'a Theme,
     border_color: Color,
 }
 
 impl<'a> InfoBox<'a> {
-    pub fn new(title: &'a str, theme: &'a Theme) -> Self {
+    pub fn new(title: impl Into<String>, theme: &'a Theme) -> Self {
         Self {
-            title,
+            title: title.into(),
             content: Vec::new(),
             theme,
             border_color: theme.primary,

@@ -3,6 +3,7 @@
 use anyhow::{Context, Result};
 use regex::Regex;
 use std::path::Path;
+use std::sync::OnceLock;
 
 use super::viewer::{LogEntry, LogLevel};
 
@@ -48,6 +49,10 @@ impl LogParser {
     }
 
     pub fn parse_line(&self, line: &str) -> Option<LogEntry> {
+        if line.trim().is_empty() {
+            return None;
+        }
+
         for pattern in &self.patterns {
             if let Some(caps) = pattern.regex.captures(line) {
                 let timestamp = pattern
@@ -58,7 +63,7 @@ impl LogParser {
                     .level_group
                     .and_then(|g| caps.get(g))
                     .map(|m| LogLevel::from_str(m.as_str()))
-                    .unwrap_or(LogLevel::Info);
+                    .unwrap_or_else(|| detect_level(line));
                 let message = caps
                     .get(pattern.message_group)
                     .map(|m| m.as_str().to_string())?;
@@ -77,7 +82,19 @@ impl LogParser {
             }
         }
 
-        None
+        // Fallback: never silently drop a line — keep it as a raw entry so
+        // `--tail` and `--search` still see it.
+        let trimmed = line.trim_end();
+        Some(LogEntry {
+            timestamp: leading_timestamp()
+                .captures(trimmed)
+                .and_then(|c| c.get(1))
+                .map(|m| m.as_str().to_string()),
+            level: detect_level(trimmed),
+            message: trimmed.to_string(),
+            source: None,
+            extra: None,
+        })
     }
 
     pub fn parse_file(&self, path: &Path) -> Result<Vec<LogEntry>> {
@@ -119,3 +136,45 @@ impl LogParser {
         Ok(())
     }
 }
+
+static LEADING_TIMESTAMP: OnceLock<Regex> = OnceLock::new();
+static LEVEL_RULES: OnceLock<Vec<(Regex, LogLevel)>> = OnceLock::new();
+
+fn leading_timestamp() -> &'static Regex {
+    LEADING_TIMESTAMP.get_or_init(|| {
+        Regex::new(r"^\s*(\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?)")
+            .expect("timestamp regex is valid")
+    })
+}
+
+fn level_rules() -> &'static [(Regex, LogLevel)] {
+    LEVEL_RULES.get_or_init(|| {
+        [
+            ("FATAL", LogLevel::Fatal),
+            ("CRITICAL", LogLevel::Fatal),
+            ("ERROR", LogLevel::Error),
+            ("PANIC", LogLevel::Error),
+            ("WARN", LogLevel::Warn),
+            ("DEBUG", LogLevel::Debug),
+            ("TRACE", LogLevel::Trace),
+        ]
+        .iter()
+        .map(|(pattern, level)| {
+            (
+                Regex::new(&format!(r"(?i)\b{}\b", pattern)).expect("level regex is valid"),
+                level.clone(),
+            )
+        })
+        .collect()
+    })
+}
+
+fn detect_level(line: &str) -> LogLevel {
+    for (regex, level) in level_rules() {
+        if regex.is_match(line) {
+            return level.clone();
+        }
+    }
+    LogLevel::Info
+}
+

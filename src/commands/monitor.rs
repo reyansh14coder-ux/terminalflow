@@ -1,45 +1,105 @@
 use anyhow::Result;
 use colored::*;
 
-pub async fn show() -> Result<()> {
-    println!("{}", "📈 System Monitor".cyan().bold());
-    println!("{}", "─".repeat(50).dimmed());
-    println!();
+use crate::process::ProcessMonitor;
 
-    // Simulated system stats (in real implementation, use sysinfo crate)
-    let cpu_usage = 45;
-    let memory_usage = 62;
-    let disk_usage = 34;
+fn bar(percent: f64, width: usize) -> String {
+    let filled = ((percent.clamp(0.0, 100.0) / 100.0) * width as f64).round() as usize;
+    let filled = filled.min(width);
+    format!("{}{}", "█".repeat(filled), "░".repeat(width - filled))
+}
 
-    println!("  {} System Resources", "📊".cyan().bold());
-    println!();
-
-    // CPU bar
-    let cpu_bar = "█".repeat(cpu_usage as usize / 5) + &"░".repeat(20 - cpu_usage as usize / 5);
-    let _cpu_color = if cpu_usage > 80 {
-        "red"
-    } else if cpu_usage > 60 {
-        "yellow"
+fn paint(percent: f64, text: String) -> ColoredString {
+    if percent > 80.0 {
+        text.red()
+    } else if percent > 60.0 {
+        text.yellow()
     } else {
-        "green"
-    };
-    println!("  CPU:     {} {}%", cpu_bar.cyan(), cpu_usage);
+        text.green()
+    }
+}
+
+pub fn format_bytes(value: u64) -> String {
+    const GB: f64 = 1024.0 * 1024.0 * 1024.0;
+    const MB: f64 = 1024.0 * 1024.0;
+    let value = value as f64;
+    if value >= GB {
+        format!("{:.1} GB", value / GB)
+    } else {
+        format!("{:.1} MB", value / MB)
+    }
+}
+
+pub async fn show() -> Result<()> {
+    let mut monitor = ProcessMonitor::new();
+    monitor.refresh()?;
+    let stats = monitor.get_stats().clone();
+
+    println!("{}", "📈 System Monitor".cyan().bold());
+    println!("{}", "─".repeat(60).dimmed());
     println!();
 
-    // Memory bar
-    let mem_bar =
-        "█".repeat(memory_usage as usize / 5) + &"░".repeat(20 - memory_usage as usize / 5);
-    println!("  Memory:  {} {}%", mem_bar.green(), memory_usage);
-    println!();
+    let cpu = stats.cpu_percent();
+    println!(
+        "  CPU:      {} {:>5.1}%",
+        paint(cpu, bar(cpu, 24)).to_string(),
+        cpu
+    );
 
-    // Disk bar
-    let disk_bar = "█".repeat(disk_usage as usize / 5) + &"░".repeat(20 - disk_usage as usize / 5);
-    println!("  Disk:    {} {}%", disk_bar.blue(), disk_usage);
-    println!();
+    let mem = stats.memory_percent();
+    println!(
+        "  Memory:   {} {:>5.1}%  ({} / {})",
+        paint(mem, bar(mem, 24)).to_string(),
+        mem,
+        format_bytes(stats.memory_used),
+        format_bytes(stats.memory_total)
+    );
 
-    println!("{}", "─".repeat(50).dimmed());
+    let disk = stats.disk_percent();
+    println!(
+        "  Disk:     {} {:>5.1}%  ({} / {})",
+        paint(disk, bar(disk, 24)).to_string(),
+        disk,
+        format_bytes(stats.disk_used),
+        format_bytes(stats.disk_total)
+    );
+
     println!();
-    println!("  {} Press 'q' to exit", "💡 Tip:".dimmed());
+    println!(
+        "  {} Uptime: {}  │  Processes: {}  │  Load: {:.2} {:.2} {:.2}",
+        "⏱".dimmed(),
+        stats.uptime_human(),
+        stats.process_count,
+        stats.load_average[0],
+        stats.load_average[1],
+        stats.load_average[2]
+    );
+
+    println!();
+    println!("{}", "─".repeat(60).dimmed());
+    println!("{}", "  🔝 Top processes by CPU".cyan().bold());
+
+    for process in monitor.get_top_cpu(5) {
+        println!(
+            "    {:<24} {:>6.1}%  {:>10}  PID {}",
+            truncate(&process.name, 24),
+            process.cpu_usage,
+            format_bytes(process.memory_usage),
+            process.pid
+        );
+    }
+
+    println!("{}", "─".repeat(60).dimmed());
 
     Ok(())
+}
+
+fn truncate(value: &str, max: usize) -> String {
+    if value.chars().count() <= max {
+        value.to_string()
+    } else {
+        let mut out: String = value.chars().take(max.saturating_sub(1)).collect();
+        out.push('…');
+        out
+    }
 }

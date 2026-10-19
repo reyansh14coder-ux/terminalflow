@@ -95,12 +95,14 @@ impl APIClient {
 
         let start = std::time::Instant::now();
 
-        let mut req = match request.method.as_str() {
+        let mut req = match request.method.as_str().to_uppercase().as_str() {
             "GET" => self.client.get(&url),
             "POST" => self.client.post(&url),
             "PUT" => self.client.put(&url),
             "DELETE" => self.client.delete(&url),
             "PATCH" => self.client.patch(&url),
+            "HEAD" => self.client.head(&url),
+            "OPTIONS" => self.client.request(reqwest::Method::OPTIONS, &url),
             _ => {
                 return Err(anyhow::anyhow!(
                     "Unsupported HTTP method: {}",
@@ -108,6 +110,10 @@ impl APIClient {
                 ))
             }
         };
+
+        if let Some(timeout) = request.timeout {
+            req = req.timeout(std::time::Duration::from_secs(timeout));
+        }
 
         for (key, value) in &request.headers {
             req = req.header(key.as_str(), value.as_str());

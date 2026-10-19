@@ -56,6 +56,22 @@ impl GitStatus {
             }
         }
 
+        let mut ahead = 0u32;
+        let mut behind = 0u32;
+        if let Some(shorthand) = head.shorthand() {
+            if let Ok(branch) = repo.find_branch(shorthand, git2::BranchType::Local) {
+                if let Ok(upstream) = branch.upstream() {
+                    if let (Some(local), Some(remote)) = (branch.get().target(), upstream.get().target())
+                    {
+                        if let Ok((a, b)) = repo.graph_ahead_behind(local, remote) {
+                            ahead = a as u32;
+                            behind = b as u32;
+                        }
+                    }
+                }
+            }
+        }
+
         Ok(Self {
             branch,
             modified,
@@ -63,28 +79,9 @@ impl GitStatus {
             deleted,
             untracked,
             staged,
-            ahead: 0,
-            behind: 0,
+            ahead,
+            behind,
         })
-    }
-
-    pub fn mock() -> Self {
-        Self {
-            branch: "main".to_string(),
-            modified: vec![
-                "src/main.rs".to_string(),
-                "Cargo.toml".to_string(),
-                "README.md".to_string(),
-                "src/lib.rs".to_string(),
-                "src/utils.rs".to_string(),
-            ],
-            added: vec!["src/ai.rs".to_string(), "src/dashboard.rs".to_string()],
-            deleted: Vec::new(),
-            untracked: vec!["temp.txt".to_string()],
-            staged: Vec::new(),
-            ahead: 2,
-            behind: 0,
-        }
     }
 
     pub fn total_changes(&self) -> usize {
